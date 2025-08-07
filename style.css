@@ -12,19 +12,43 @@ header {
   color: white;
   padding: 1rem 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 15px; /* replaces justify-content */
 }
 
-header h1 {
-  margin: 0;
-}
 
-nav a {
+
+header nav a {
   color: white;
   margin-left: 15px;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
+
+header nav a:hover {
+  color: #ffcc00;
+}
+
+header a.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+}
+
+header a.logo-link img {
+  height: 60px;
+}
+
+header a.logo-link h1 {
+  margin-left: 10px;
+  font-size: 1.8rem;
+  margin: 0;
+  color: white;
+}
+
+
 
 main {
   padding: 2rem;
