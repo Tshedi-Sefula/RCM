@@ -2,40 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Contact Us | Your Church Name</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | RCM Toitskraal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
 </head>
 <body>
-  <header>
-    <h1>Your Church Name</h1>
+  <header data-aos="fade-down">
+    <a href="index.html" class="logo-link">
+      <img src="logo.png" alt="RCM Toits Logo" />
+      <h1>Restoration Center Ministries Toitskraal</h1>
+    </a>
     <nav>
       <a href="index.html">Home</a>
       <a href="about.html">About Us</a>
       <a href="gallery.html">Gallery</a>
-      <a href="contact.html">Contact</a>
+      <a href="videos.html">Videos</a>
+      <a href="contact.html" class="active">Contact</a>
     </nav>
   </header>
 
+  <section class="hero" style="background-image:url('images/contact-hero.jpg')" data-aos="fade-up">
+    <h2 data-aos="fade-down">Get in Touch</h2>
+    <p data-aos="fade-up" data-aos-delay="200">We’d love to hear from you</p>
+  </section>
+
   <main>
-    <section class="contact">
-      <h2>Contact Us</h2>
-      <form action="mailto:your-email@example.com" method="POST" enctype="text/plain">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required />
+    <section>
+      <h2 data-aos="fade-up">Contact Us</h2>
+      <p style="text-align:center; max-width:800px; margin:auto;" data-aos="fade-in" data-aos-delay="200">
+        Whether you have questions, need prayer, or want to join our community, we are here to connect with you.
+      </p>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
+      <div class="contact-form" data-aos="zoom-in" data-aos-delay="400">
+        <form action="https://formspree.io/f/yourFormID" method="POST">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" required />
+          </div>
 
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required />
+          </div>
 
-        <button type="submit">Send</button>
-      </form>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea name="message" id="message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="btn">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+    <section data-aos="fade-up" data-aos-delay="200">
+      <h2>Our Location</h2>
+      <div style="max-width:800px; margin:auto;">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!..." 
+          width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy">
+        </iframe>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Your Church Name</p>
+  <footer data-aos="fade-up">
+    <p>&copy; 2025 Restoration Center Ministries Toitskraal</p>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>AOS.init({duration:1000, once:true});</script>
 </body>
 </html>

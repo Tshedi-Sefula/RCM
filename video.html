@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to Restoration Center Toitskraal</title>
+  <title>Videos | RCM Toitskraal</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
@@ -23,26 +23,27 @@
     </nav>
   </header>
 
-  <section class="hero" style="background-image:url('images/hero.jpg')" data-aos="fade-up">
-    <h2 data-aos="fade-down">Welcome Home</h2>
-    <p data-aos="fade-up" data-aos-delay="200">We are a community of believers passionate about Jesus and people.</p>
-    <a href="about.html" class="btn" data-aos="zoom-in" data-aos-delay="400">Learn More</a>
+  <section class="hero" style="background-image:url('images/videos-hero.jpg')" data-aos="fade-up">
+    <h2 data-aos="fade-down">Our YouTube Videos</h2>
   </section>
 
   <main>
     <section>
-      <h2 data-aos="fade-up">Our Mission</h2>
-      <p style="text-align:center; max-width:800px; margin:auto;" data-aos="fade-in" data-aos-delay="200">
-        To build a Christ-centered community where everyone feels welcome and empowered to grow in faith.
-      </p>
+      <div id="video-player" style="max-width:900px; margin:auto;" data-aos="fade-up">
+        <iframe id="player" src="" allowfullscreen></iframe>
+      </div>
+
+      <div class="video-grid" id="video-list" data-aos="fade-up" data-aos-delay="200"></div>
     </section>
   </main>
 
   <footer data-aos="fade-up">
-    <p>&copy; 2025 Restoration Center Ministries Toitskraal</p>
+    <p>&copy; 2025 RCM Toitskraal</p>
   </footer>
 
+  <script src="videos.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   <script>AOS.init({duration:1000, once:true});</script>
 </body>
 </html>
+

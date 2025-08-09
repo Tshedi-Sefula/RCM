@@ -2,47 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About Us | RCM Toitskraal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
 </head>
 <body>
-  <header>
-  <a href="index.html" class="logo-link">
-    <img src="logo.png" alt="RCM Toits Logo" />
-    <h1>Restoration Center Ministries Toitskraal</h1>
-  </a>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="about.html">About Us</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="videos.html">Videos</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-</header>
+  <header data-aos="fade-down">
+    <a href="index.html" class="logo-link">
+      <img src="logo.png" alt="RCM Toits Logo" />
+      <h1>Restoration Center Ministries Toitskraal</h1>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="videos.html">Videos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
-
+  <section class="hero" style="background-image:url('images/about-hero.jpg')" data-aos="fade-up">
+    <h2 data-aos="fade-down">About Us</h2>
+  </section>
 
   <main>
     <section class="about">
-      <h2>About Us</h2>
-      <p>Welcome to RCM Toitskraal! We are a community dedicated to worship, fellowship, and serving others through the love of Jesus Christ.</p>
-      
-      <h3>Our Vision</h3>
-      <p>To impact lives and build a Christ-centered community where everyone feels welcome and empowered to grow in faith.</p>
+      <div class="feature" data-aos="fade-right">
+        <h3>Our Vision</h3>
+        <p>To impact lives and build a Christ-centered community where everyone feels welcome and empowered to grow in faith.</p>
+      </div>
 
-      <h3>Our Mission</h3>
-      <p>We strive to provide a nurturing environment for spiritual growth, meaningful relationships, and community outreach.</p>
+      <div class="feature" data-aos="fade-left">
+        <h3>Our Mission</h3>
+        <p>We strive to provide a nurturing environment for spiritual growth, meaningful relationships, and community outreach.</p>
+      </div>
 
-      <h3>Leadership</h3>
-      <p>Pastor VVM Mashele, along with a dedicated team of elders and ministry leaders, guides our church family.</p>
+      <div class="feature" data-aos="fade-right">
+        <h3>Leadership</h3>
+        <p>Pastor VVM Mashele, along with a dedicated team of elders and ministry leaders, guides our church family.</p>
+      </div>
 
-      <h3>History</h3>
-      <p>Founded in 2024, RCM Toitskraal has been committed to serving the community of Toitskraal, and Siyabuswa as a whole, through worship, teaching, and outreach programs.</p>
+      <div class="feature" data-aos="fade-left">
+        <h3>History</h3>
+        <p>Founded in 2024, RCM Toitskraal has been committed to serving the community of Toitskraal and Siyabuswa through worship, teaching, and outreach programs.</p>
+      </div>
     </section>
   </main>
 
-  <footer>
+  <footer data-aos="fade-up">
     <p>&copy; 2025 Restoration Center Ministries Toitskraal</p>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>AOS.init({duration:1000, once:true});</script>
 </body>
 </html>

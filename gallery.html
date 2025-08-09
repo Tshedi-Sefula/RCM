@@ -2,29 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gallery | RCM Toitskraal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
 </head>
 <body>
   <header>
-  <a href="index.html" class="logo-link">
-    <img src="logo.png" alt="RCM Toits Logo" />
-    <h1>Restoration Center Ministries Toitskraal</h1>
-  </a>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="about.html">About Us</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="videos.html">Videos</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-</header>
+    <a href="index.html" class="logo-link">
+      <img src="logo.png" alt="RCM Toits Logo" />
+      <h1>Restoration Center Ministries Toitskraal</h1>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="videos.html">Videos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
-
+  <section class="hero" style="background-image:url('images/gallery-hero.jpg')">
+    <h2>Our Moments</h2>
+  </section>
 
   <main>
     <section class="gallery">
-      <h2>Our Moments</h2>
       <div class="gallery-grid">
         <img src="images/img1.jpg" alt="Church Event 1" />
         <img src="images/img2.jpg" alt="Church Event 2" />
@@ -34,7 +39,15 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Toitskraal</p>
+    <p>&copy; 2025 Restoration Center Ministries Toitskraal</p>
   </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+</script>
+
 </body>
 </html>
