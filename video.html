@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Videos | RCM Toitskraal</title>
@@ -9,20 +11,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
 </head>
 <body>
-  <header data-aos="fade-down">
-    <a href="index.html" class="logo-link">
-      <img src="logo.png" alt="RCM Toits Logo" />
-      <h1>Restoration Center Ministries Toitskraal</h1>
+  <header class="fixed top-0 w-full bg-black bg-opacity-60 flex justify-between items-center p-4 z-50">
+    <a href="#" class="flex items-center text-white">
+      <img src="images/logo.png" alt="Logo" class="h-12 mr-3" />
+      <span class="font-bold text-xl">RCM Toitskraal</span>
     </a>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About Us</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="videos.html">Videos</a>
-      <a href="contact.html">Contact</a>
+    <nav class="hidden md:flex space-x-6">
+      <a href="#about" class="text-white hover:text-orange-500 font-medium">About</a>
+      <a href="#gallery" class="text-white hover:text-orange-500 font-medium">Gallery</a>
+      <a href="#videos" class="text-white hover:text-orange-500 font-medium">Videos</a>
+      <a href="#contact" class="text-white hover:text-orange-500 font-medium">Contact</a>
     </nav>
+    <button class="md:hidden text-white text-2xl">☰</button>
   </header>
-
   <section class="hero" style="background-image:url('images/videos-hero.jpg')" data-aos="fade-up">
     <h2 data-aos="fade-down">Our YouTube Videos</h2>
   </section>
