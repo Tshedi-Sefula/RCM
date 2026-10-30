@@ -12,26 +12,31 @@ export const site = {
   shortName: "RCM Toitskraal",
   url: siteUrl(),
   description:
-    "Restoration Center Ministries Toitskraal is a community of believers passionate about Jesus and people. Join us for Sunday and midweek services in Toitskraal, Mpumalanga.",
+    "Restoration Center Ministries Toitskraal is a community of believers passionate about Jesus and people. Join us for Sunday and midweek services in Toitskraal, Marble Hall.",
   copyright: "© 2026 Restoration Center Ministries Toitskraal",
   spotifyUrl:
     "https://open.spotify.com/artist/2n5wafdQFWEOKTK3vc9Cwf?si=z3knZ89NTbO0VHz2pDB6dg",
-  // Placeholders: replace with the church's real details.
+  // Phone and email are placeholders: replace with the church's real details.
   contact: {
-    address: "Toitskraal, Mpumalanga, South Africa",
+    address: "RCM Toitskraal, D5 Toitskraal Woongebied, Marble Hall",
     phone: "[Phone number]",
     email: "[Email address]",
   },
   serviceTimes: [
-    { day: "Sunday", time: "9:00 AM & 6:00 PM" },
+    { day: "Sunday", time: "9:00 AM – 12:00 PM" },
     { day: "Wednesday", time: "7:00 PM" },
   ],
   // The same services as start times, for the home page countdown.
   // weekday: 0 = Sunday … 6 = Saturday, in the church's local time.
   serviceSchedule: [
     { weekday: 0, hour: 9, minute: 0 },
-    { weekday: 0, hour: 18, minute: 0 },
     { weekday: 3, hour: 19, minute: 0 },
+  ],
+  // Weekly services shown on every matching day of the /calendar page.
+  // They're a given, so they live here rather than as calendar entries.
+  // Times are "HH:MM" in the church's local time.
+  recurringServices: [
+    { title: "Sunday Service", weekday: 0, startTime: "09:00", endTime: "12:00" },
   ],
   // Home page "Our Fellowships" cards. Placeholders: edit the names,
   // descriptions and photos to match the church's ministries.

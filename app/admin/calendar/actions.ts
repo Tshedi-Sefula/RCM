@@ -12,6 +12,8 @@ import type { CalendarCategory, Database } from "@/lib/types/database";
 // RLS also limits writes to admins; requireAdmin() is the first line.
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// <input type="time"> values, "HH:MM".
+const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 function text(formData: FormData, name: string) {
   const value = formData.get(name);
@@ -37,6 +39,9 @@ export async function saveCalendarEntry(formData: FormData): Promise<ActionResul
   const startDate = text(formData, "start_date");
   const endDate = text(formData, "end_date");
   const category = text(formData, "category");
+  const startTime = text(formData, "start_time");
+  const endTime = text(formData, "end_time");
+  const location = text(formData, "location");
 
   if (id && !UUID_PATTERN.test(id)) return { ok: false, error: "This entry couldn't be found." };
 
@@ -47,6 +52,14 @@ export async function saveCalendarEntry(formData: FormData): Promise<ActionResul
   if (endDate && !isDateInputValue(endDate)) fieldErrors.end_date = "Choose a valid end date, or leave it empty.";
   // "YYYY-MM-DD" strings sort the same as the dates they hold.
   else if (endDate && endDate < startDate) fieldErrors.end_date = "The end date can't be before the start date.";
+  if (startTime && !TIME_PATTERN.test(startTime)) fieldErrors.start_time = "Choose a valid start time, or leave it empty.";
+  if (endTime && !TIME_PATTERN.test(endTime)) fieldErrors.end_time = "Choose a valid end time, or leave it empty.";
+  else if (endTime && !startTime) fieldErrors.end_time = "Add a start time too, or leave the end time empty.";
+  // "HH:MM" strings sort the same as the times they hold.
+  else if (endTime && (!endDate || endDate === startDate) && endTime < startTime) {
+    fieldErrors.end_time = "The end time can't be before the start time.";
+  }
+  if (location.length > 200) fieldErrors.location = "Keep the location under 200 characters.";
   if (!isCategory(category)) fieldErrors.category = "Choose a category.";
   if (Object.keys(fieldErrors).length > 0 || !isCategory(category)) {
     return { ok: false, error: "Check the highlighted fields.", fieldErrors };
@@ -58,6 +71,9 @@ export async function saveCalendarEntry(formData: FormData): Promise<ActionResul
     end_date: endDate || null,
     description: text(formData, "description") || null,
     category,
+    start_time: startTime || null,
+    end_time: endTime || null,
+    location: location || null,
   } satisfies Database["public"]["Tables"]["calendar_entries"]["Insert"];
 
   const supabase = await createClient();

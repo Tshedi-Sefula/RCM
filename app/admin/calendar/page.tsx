@@ -7,7 +7,7 @@ import DataTable, { Badge, DataTableSkeleton, type Column } from "@/components/a
 import DeleteButton from "@/components/admin/DeleteButton";
 import PageHeader from "@/components/admin/PageHeader";
 import { Notice } from "@/components/ui";
-import { calendarCategories } from "@/lib/calendar";
+import { calendarCategories, shortTime } from "@/lib/calendar";
 import { getAllCalendarEntries } from "@/lib/data/admin";
 import type { CalendarEntry } from "@/lib/types/database";
 
@@ -23,10 +23,14 @@ const dateFormat = new Intl.DateTimeFormat("en-ZA", {
   timeZone: "UTC",
 });
 
-function formatDates({ start_date, end_date }: CalendarEntry) {
+function formatDates({ start_date, end_date, start_time, end_time }: CalendarEntry) {
   const start = dateFormat.format(new Date(`${start_date}T00:00:00Z`));
-  if (!end_date || end_date === start_date) return start;
-  return `${start} – ${dateFormat.format(new Date(`${end_date}T00:00:00Z`))}`;
+  const dates =
+    !end_date || end_date === start_date
+      ? start
+      : `${start} – ${dateFormat.format(new Date(`${end_date}T00:00:00Z`))}`;
+  if (!start_time) return dates;
+  return `${dates}, ${shortTime(start_time)}${end_time ? `–${shortTime(end_time)}` : ""}`;
 }
 
 const columns: Column<CalendarEntry>[] = [
@@ -36,6 +40,7 @@ const columns: Column<CalendarEntry>[] = [
       <div className="min-w-48">
         <p className="font-semibold text-brand-ink">{entry.title}</p>
         {entry.description && <p className="line-clamp-1 text-brand-muted">{entry.description}</p>}
+        {entry.location && <p className="line-clamp-1 text-brand-muted">At {entry.location}</p>}
         <p className="text-brand-muted md:hidden">{formatDates(entry)}</p>
       </div>
     ),
@@ -76,7 +81,7 @@ export default function AdminCalendarPage() {
       <PageHeader
         eyebrow="Content"
         title="Calendar entries"
-        description="Services, special events and holidays shown on the website's calendar."
+        description="Services, special events and holidays shown on the website's calendar. The weekly Sunday service is added automatically and isn't listed here."
         action={<CalendarEntryFormButton />}
       />
       <Suspense fallback={<DataTableSkeleton />}>

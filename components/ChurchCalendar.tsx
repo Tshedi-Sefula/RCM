@@ -5,7 +5,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import type { EventContentArg, EventMountArg } from "@fullcalendar/core";
-import { toCalendarEvent } from "@/lib/calendar";
+import { recurringServiceEvents, toCalendarEvent } from "@/lib/calendar";
 import type { CalendarEntry } from "@/lib/types/database";
 
 type ChurchCalendarProps = {
@@ -24,28 +24,44 @@ function useIsMobile() {
   );
 }
 
-// Hover tooltip with the description (a native title attribute).
+// Hover tooltip with the description and location (a native title attribute).
 function addTooltip({ el, event }: EventMountArg) {
   const description = event.extendedProps.description as string | null;
-  if (description) el.title = description;
+  const location = event.extendedProps.location as string | null;
+  const tooltip = [description, location && `Location: ${location}`].filter(Boolean).join("\n");
+  if (tooltip) el.title = tooltip;
 }
 
-// Touch screens can't hover, so the list view shows descriptions inline.
+// Touch screens can't hover, so the list view shows descriptions and locations inline.
 function renderEventContent({ event, view }: EventContentArg) {
   if (!view.type.startsWith("list")) return true;
   const description = event.extendedProps.description as string | null;
+  const location = event.extendedProps.location as string | null;
   return (
     <>
       <span className="font-semibold">{event.title}</span>
       {description && <span className="mt-0.5 block text-sm text-brand-muted">{description}</span>}
+      {location && (
+        <span className="mt-1 inline-flex items-start gap-1 text-sm text-brand-muted">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 shrink-0" aria-hidden>
+            <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" />
+            <circle cx="12" cy="10" r="2.5" />
+          </svg>
+          <span>
+            <span className="sr-only">Location: </span>
+            {location}
+          </span>
+        </span>
+      )}
     </>
   );
 }
 
 // View-only calendar: no drag/drop, selection or editing for visitors.
-// Phones start on the list view, which reads better than a tiny grid.
+// Phones start on the list view, which reads better than a tiny grid. It lists a
+// month at a time so the weekly services don't crowd out everything else.
 export default function ChurchCalendar({ entries }: ChurchCalendarProps) {
-  const events = useMemo(() => entries.map(toCalendarEvent), [entries]);
+  const events = useMemo(() => [...recurringServiceEvents(), ...entries.map(toCalendarEvent)], [entries]);
   const isMobile = useIsMobile();
 
   if (isMobile === null) return <CalendarSkeleton />;
@@ -53,11 +69,11 @@ export default function ChurchCalendar({ entries }: ChurchCalendarProps) {
   return (
     <FullCalendar
       plugins={[dayGridPlugin, listPlugin]}
-      initialView={isMobile ? "listYear" : "dayGridMonth"}
+      initialView={isMobile ? "listMonth" : "dayGridMonth"}
       headerToolbar={{
         left: "prev,next today",
         center: "title",
-        right: "dayGridMonth,listYear",
+        right: "dayGridMonth,listMonth",
       }}
       buttonText={{ today: "Today", month: "Month", list: "List" }}
       events={events}
@@ -68,6 +84,7 @@ export default function ChurchCalendar({ entries }: ChurchCalendarProps) {
       eventDidMount={addTooltip}
       eventContent={renderEventContent}
       noEventsContent="No dates on the calendar for this period."
+      eventTimeFormat={{ hour: "2-digit", minute: "2-digit", hour12: false }}
       height="auto"
       dayMaxEventRows={3}
     />

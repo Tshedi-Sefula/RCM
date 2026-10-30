@@ -1,4 +1,5 @@
 import type { EventInput } from "@fullcalendar/core";
+import { site } from "@/lib/site";
 import type { CalendarCategory, CalendarEntry } from "@/lib/types/database";
 
 // Colours live in globals.css as --color-calendar-*. `swatch` is written
@@ -45,8 +46,29 @@ function nextDay(date: string) {
   return d.toISOString().slice(0, 10);
 }
 
+// Postgres `time` values arrive as "HH:MM:SS"; inputs and labels use "HH:MM".
+export function shortTime(time: string) {
+  return time.slice(0, 5);
+}
+
 export function toCalendarEvent(entry: CalendarEntry): EventInput {
   const { color, textColor } = calendarCategories[entry.category] ?? calendarCategories.other;
+  const extendedProps = { description: entry.description, location: entry.location };
+
+  if (entry.start_time) {
+    const lastDay = entry.end_date ?? entry.start_date;
+    return {
+      id: entry.id,
+      title: entry.title,
+      start: `${entry.start_date}T${shortTime(entry.start_time)}`,
+      end: entry.end_time ? `${lastDay}T${shortTime(entry.end_time)}` : undefined,
+      allDay: false,
+      color,
+      textColor,
+      extendedProps,
+    };
+  }
+
   return {
     id: entry.id,
     title: entry.title,
@@ -55,6 +77,22 @@ export function toCalendarEvent(entry: CalendarEntry): EventInput {
     allDay: true,
     color,
     textColor,
-    extendedProps: { description: entry.description },
+    extendedProps,
   };
+}
+
+// site.recurringServices as FullCalendar recurring events, repeating every week
+// at the church's address.
+export function recurringServiceEvents(): EventInput[] {
+  const { color, textColor } = calendarCategories.service;
+  return site.recurringServices.map((service) => ({
+    id: `recurring-${service.weekday}-${service.startTime}`,
+    title: service.title,
+    daysOfWeek: [service.weekday],
+    startTime: service.startTime,
+    endTime: service.endTime,
+    color,
+    textColor,
+    extendedProps: { description: "Every week. All are welcome.", location: site.contact.address },
+  }));
 }

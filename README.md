@@ -44,6 +44,13 @@ Migrations are in `supabase/migrations/` and must run in filename order:
 1. `20261030000000_init_schema.sql` — `profiles`, `events`, `calendar_entries`, `gallery_images`, `stream_videos`, RLS policies, `is_admin()` helper.
 2. `20261030000100_storage.sql` — `event-posters` and `gallery` storage buckets (public, 10 MB limit, JPEG/PNG/WebP/AVIF) and their policies.
 3. `20261030000200_contact_messages.sql` — `contact_messages` for the contact form: anyone can submit, only admins can read.
+4. `20261030000300_calendar_times_location.sql` — optional `start_time`, `end_time` and `location` on `calendar_entries`.
+
+The weekly Sunday service isn't stored in the database: it comes from `recurringServices` in
+`lib/site.ts` and appears on every Sunday of the calendar automatically.
+
+One-off content (e.g. an event added on someone's behalf) lives in `supabase/content/`. Run those
+files in the SQL editor after the migrations; each is safe to re-run.
 
 **Option A — SQL editor (no tooling):** Dashboard → **SQL Editor** → New query → paste the
 contents of each file → Run. Do them in order.

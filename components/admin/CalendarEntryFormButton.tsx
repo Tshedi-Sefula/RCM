@@ -6,7 +6,7 @@ import Field, { FormError, inputClasses, textareaClasses } from "@/components/ad
 import Modal from "@/components/admin/Modal";
 import { Button } from "@/components/ui";
 import type { ActionResult } from "@/lib/action-result";
-import { calendarCategories } from "@/lib/calendar";
+import { calendarCategories, shortTime } from "@/lib/calendar";
 import type { CalendarCategory, CalendarEntry } from "@/lib/types/database";
 
 const categoryOptions = Object.entries(calendarCategories) as [
@@ -116,6 +116,56 @@ export default function CalendarEntryFormButton({ entry }: { entry?: CalendarEnt
               )}
             </Field>
           </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field
+              id={fieldId("start_time")}
+              label="Start time"
+              optional
+              hint="Leave empty for an all-day entry."
+              error={errors.start_time}
+            >
+              {(describedBy) => (
+                <input
+                  id={fieldId("start_time")}
+                  name="start_time"
+                  type="time"
+                  defaultValue={entry?.start_time ? shortTime(entry.start_time) : undefined}
+                  aria-invalid={errors.start_time ? true : undefined}
+                  aria-describedby={describedBy}
+                  className={inputClasses}
+                />
+              )}
+            </Field>
+
+            <Field id={fieldId("end_time")} label="End time" optional error={errors.end_time}>
+              {(describedBy) => (
+                <input
+                  id={fieldId("end_time")}
+                  name="end_time"
+                  type="time"
+                  defaultValue={entry?.end_time ? shortTime(entry.end_time) : undefined}
+                  aria-invalid={errors.end_time ? true : undefined}
+                  aria-describedby={describedBy}
+                  className={inputClasses}
+                />
+              )}
+            </Field>
+          </div>
+
+          <Field id={fieldId("location")} label="Location" optional error={errors.location}>
+            {(describedBy) => (
+              <input
+                id={fieldId("location")}
+                name="location"
+                maxLength={200}
+                defaultValue={entry?.location ?? undefined}
+                aria-invalid={errors.location ? true : undefined}
+                aria-describedby={describedBy}
+                className={inputClasses}
+              />
+            )}
+          </Field>
 
           <Field id={fieldId("category")} label="Category" error={errors.category}>
             {(describedBy) => (

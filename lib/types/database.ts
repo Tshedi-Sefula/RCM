@@ -26,6 +26,10 @@ export type CalendarEntry = {
   end_date: string | null;
   description: string | null;
   category: CalendarCategory;
+  // "HH:MM:SS" in the church's local time; null for all-day entries.
+  start_time: string | null;
+  end_time: string | null;
+  location: string | null;
   created_at: string;
 };
 
@@ -84,7 +88,10 @@ export type Database = {
   public: {
     Tables: {
       events: Table<ChurchEvent, "id" | "description" | "location" | "poster_url" | "is_featured" | "created_at">;
-      calendar_entries: Table<CalendarEntry, "id" | "end_date" | "description" | "category" | "created_at">;
+      calendar_entries: Table<
+        CalendarEntry,
+        "id" | "end_date" | "description" | "category" | "start_time" | "end_time" | "location" | "created_at"
+      >;
       gallery_images: Table<GalleryImage, "id" | "caption" | "uploaded_at">;
       stream_videos: Table<StreamVideo, "id" | "is_memorable" | "stream_date" | "created_at">;
       contact_messages: Table<ContactMessage, "id" | "email" | "phone" | "topic" | "is_read" | "created_at">;
