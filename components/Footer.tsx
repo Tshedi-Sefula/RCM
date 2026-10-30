@@ -1,9 +1,42 @@
 import Image from "next/image";
 import Link from "next/link";
+import SocialLink from "@/components/SocialLink";
 import SpotifyLink from "@/components/SpotifyLink";
+import FacebookIcon from "@/components/icons/FacebookIcon";
+import YouTubeIcon from "@/components/icons/YouTubeIcon";
 import BrandStripe from "@/components/ui/BrandStripe";
 import Container from "@/components/ui/Container";
 import { navLinks, site } from "@/lib/site";
+
+const socialRing = "border border-white/15";
+
+const socialLinks = [
+  { label: "Listen on Spotify", link: <SpotifyLink className={socialRing} /> },
+  {
+    label: "Watch on YouTube",
+    link: (
+      <SocialLink
+        href={site.youtubeUrl}
+        label="Watch on YouTube"
+        icon={<YouTubeIcon className="size-5" />}
+        brandClassName="hover:text-youtube focus-visible:text-youtube"
+        className={socialRing}
+      />
+    ),
+  },
+  {
+    label: "Follow on Facebook",
+    link: (
+      <SocialLink
+        href={site.facebookUrl}
+        label="Follow on Facebook"
+        icon={<FacebookIcon className="size-5" />}
+        brandClassName="hover:text-facebook focus-visible:text-facebook"
+        className={socialRing}
+      />
+    ),
+  },
+];
 
 const headingClass = "text-xs font-bold uppercase tracking-[0.22em] text-brand-accent-light";
 
@@ -20,10 +53,14 @@ export default function Footer() {
           <p className="mt-5 max-w-sm text-sm leading-relaxed">
             A community of believers passionate about Jesus and people. You are welcome here.
           </p>
-          <div className="mt-6 flex items-center gap-2 text-white">
-            <SpotifyLink className="border border-white/15" />
-            <span className="text-sm text-white/60">Listen on Spotify</span>
-          </div>
+          <ul className="mt-6 space-y-3 text-white">
+            {socialLinks.map((social) => (
+              <li key={social.label} className="flex items-center gap-2">
+                {social.link}
+                <span className="text-sm text-white/60">{social.label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <nav aria-label="Footer" className="lg:col-span-2">

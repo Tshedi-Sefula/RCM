@@ -16,6 +16,8 @@ export const site = {
   copyright: "© 2026 Restoration Center Ministries Toitskraal",
   spotifyUrl:
     "https://open.spotify.com/artist/2n5wafdQFWEOKTK3vc9Cwf?si=z3knZ89NTbO0VHz2pDB6dg",
+  youtubeUrl: "https://youtube.com/@rcm_toitskraal?si=saY10tOEmNm0Hqi4",
+  facebookUrl: "https://www.facebook.com/share/1JbSbE3SxM/",
   // Phone and email are placeholders: replace with the church's real details.
   contact: {
     address: "RCM Toitskraal, D5 Toitskraal Woongebied, Marble Hall",

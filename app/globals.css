@@ -45,6 +45,8 @@
   --color-error-soft: #fee2e2;
 
   --color-spotify: #1db954;
+  --color-youtube: #ff0033;
+  --color-facebook: #1877f2;
 
   /* Calendar categories. Text colours are set in lib/calendar.ts. */
   --color-calendar-service: #1d4ed8;
