@@ -7,7 +7,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Only admin routes. Public pages read content with a cookie-less client,
-  // so they never need the session and the proxy never touches them.
-  matcher: ["/admin", "/admin/:path*"],
+  // Only admin and pastor routes. Public pages read content with a cookie-less
+  // client, so they never need the session and the proxy never touches them.
+  matcher: ["/admin", "/admin/:path*", "/pastor", "/pastor/:path*"],
 };

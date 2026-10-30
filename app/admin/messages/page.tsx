@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { deleteContactMessage } from "@/app/admin/messages/actions";
+import { deleteThread } from "@/app/admin/messages/actions";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Badge } from "@/components/admin/DataTable";
 import DeleteButton from "@/components/admin/DeleteButton";
-import MarkReadButton from "@/components/admin/MarkReadButton";
+import ForwardForm from "@/components/admin/ForwardForm";
 import PageHeader from "@/components/admin/PageHeader";
 import { Notice } from "@/components/ui";
-import { cn } from "@/lib/cn";
 import { contactTopicLabel } from "@/lib/contact";
-import { getAllContactMessages } from "@/lib/data/admin";
+import { getForwardedThread, getInboxThreads, type Pastor } from "@/lib/data/admin";
 import { site } from "@/lib/site";
-import type { ContactMessage } from "@/lib/types/database";
+import { THREAD_STATUS_LABELS, UUID_PATTERN } from "@/lib/threads";
+import type { ContactThread } from "@/lib/types/database";
 
 export const metadata: Metadata = { title: "Messages" };
 
@@ -34,14 +34,17 @@ function whatsappUrl(phone: string) {
 
 const linkClass = "text-brand-primary underline underline-offset-2 hover:text-brand-accent-strong";
 
-export default function AdminMessagesPage() {
+export default function AdminMessagesPage({ searchParams }: PageProps<"/admin/messages">) {
   return (
     <AdminLayout>
       <PageHeader
         eyebrow="Inbox"
         title="Messages"
-        description="Questions and prayer requests sent through the website's contact form, newest first. Only admins can see these."
+        description="Questions and prayer requests from the website's contact form. Forward each one to a pastor, who replies on the site; the sender reads the reply through their private link."
       />
+      <Suspense fallback={null}>
+        {searchParams.then(({ forwarded }) => (typeof forwarded === "string" ? <ForwardedNotice id={forwarded} /> : null))}
+      </Suspense>
       <Suspense fallback={<MessagesSkeleton />}>
         <MessageList />
       </Suspense>
@@ -49,8 +52,19 @@ export default function AdminMessagesPage() {
   );
 }
 
+async function ForwardedNotice({ id }: { id: string }) {
+  if (!UUID_PATTERN.test(id)) return null;
+  const forwarded = await getForwardedThread(id);
+  if (!forwarded) return null;
+  return (
+    <p role="status" className="mb-6 rounded-lg border border-success/20 bg-success-soft px-4 py-3 font-medium text-success">
+      The message from {forwarded.senderName} was forwarded to {forwarded.pastorName}.
+    </p>
+  );
+}
+
 async function MessageList() {
-  const { data: messages, error } = await getAllContactMessages();
+  const { data, error } = await getInboxThreads();
 
   if (error !== null) {
     return (
@@ -60,84 +74,117 @@ async function MessageList() {
     );
   }
 
-  if (messages.length === 0) {
-    return <Notice title="No messages yet">Messages from the website&apos;s contact form will appear here.</Notice>;
-  }
-
-  const unread = messages.filter((m) => !m.is_read).length;
+  const { threads, pastors } = data;
+  const pastorNames = new Map(pastors.map((p) => [p.id, p.full_name ?? p.email ?? "Unnamed pastor"]));
+  // New threads, plus any whose pastor's account was removed.
+  const toForward = threads.filter((t) => t.status === "new" || !t.assigned_pastor_id);
+  const assigned = threads.filter((t) => t.status !== "new" && t.assigned_pastor_id);
 
   return (
-    <>
-      <p className="mb-4 text-sm text-brand-muted">
-        {messages.length} {messages.length === 1 ? "message" : "messages"}
-        {unread > 0 && `, ${unread} unread`}
-      </p>
-      <ul className="space-y-4">
-        {messages.map((message) => (
-          <li key={message.id}>
-            <MessageCard message={message} />
-          </li>
-        ))}
-      </ul>
-    </>
+    <div className="space-y-12">
+      <section aria-labelledby="to-forward">
+        <h2 id="to-forward" className="mb-4 font-display text-2xl font-bold">
+          To forward <span className="text-brand-muted">({toForward.length})</span>
+        </h2>
+        {toForward.length === 0 ? (
+          <Notice title="Nothing to forward">New messages from the website&apos;s contact form will appear here.</Notice>
+        ) : (
+          <ul className="space-y-4">
+            {toForward.map((thread) => (
+              <li key={thread.id}>
+                <ThreadCard thread={thread} pastors={pastors} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section aria-labelledby="with-pastors">
+        <h2 id="with-pastors" className="mb-4 font-display text-2xl font-bold">
+          With pastors <span className="text-brand-muted">({assigned.length})</span>
+        </h2>
+        {assigned.length === 0 ? (
+          <Notice title="No forwarded messages">Messages you forward will be listed here until they&apos;re closed.</Notice>
+        ) : (
+          <ul className="divide-y divide-brand-line overflow-hidden rounded-lg border border-brand-line bg-white shadow-card">
+            {assigned.map((thread) => (
+              <li key={thread.id} className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4">
+                <div className="min-w-0">
+                  <p className="font-semibold">
+                    {thread.sender_name}
+                    <span className="font-normal text-brand-muted"> · {contactTopicLabel(thread.topic)}</span>
+                  </p>
+                  <p className="text-sm text-brand-muted">
+                    {pastorNames.get(thread.assigned_pastor_id!) ?? "Pastor"} · last activity{" "}
+                    <time dateTime={thread.last_activity_at}>{dateFormat.format(new Date(thread.last_activity_at))}</time>
+                  </p>
+                </div>
+                <Badge
+                  className={thread.status === "forwarded" ? "bg-brand-accent-soft text-brand-accent-strong" : undefined}
+                >
+                  {THREAD_STATUS_LABELS[thread.status]}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
   );
 }
 
-function MessageCard({ message }: { message: ContactMessage }) {
+function ThreadCard({ thread, pastors }: { thread: ContactThread; pastors: Pastor[] }) {
   return (
-    <article
-      className={cn(
-        "rounded-lg border bg-white p-5 shadow-card sm:p-6",
-        message.is_read ? "border-brand-line" : "border-brand-accent/40 border-l-4 border-l-brand-accent",
-      )}
-    >
+    <article className="rounded-lg border border-brand-accent/40 border-l-4 border-l-brand-accent bg-white p-5 shadow-card sm:p-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-lg font-bold">{message.name}</h2>
-            {!message.is_read && <Badge className="bg-brand-accent text-white">New</Badge>}
-            <Badge className={message.topic === "prayer" ? "bg-brand-accent-soft text-brand-accent-strong" : undefined}>
-              {contactTopicLabel(message.topic)}
+            <h3 className="text-lg font-bold">{thread.sender_name}</h3>
+            {thread.status === "new" ? (
+              <Badge className="bg-brand-accent text-white">New</Badge>
+            ) : (
+              <Badge>Pastor removed</Badge>
+            )}
+            <Badge className={thread.topic === "prayer" ? "bg-brand-accent-soft text-brand-accent-strong" : undefined}>
+              {contactTopicLabel(thread.topic)}
             </Badge>
           </div>
           <p className="mt-1 text-sm text-brand-muted">
-            <time dateTime={message.created_at}>{dateFormat.format(new Date(message.created_at))}</time>
+            <time dateTime={thread.created_at}>{dateFormat.format(new Date(thread.created_at))}</time>
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-1">
-          <MarkReadButton id={message.id} isRead={message.is_read} />
-          <DeleteButton
-            action={deleteContactMessage.bind(null, message.id)}
-            itemName={`the message from ${message.name}`}
-          />
-        </div>
+        <DeleteButton action={deleteThread.bind(null, thread.id)} itemName={`the message from ${thread.sender_name}`} />
       </header>
 
-      <p className="mt-4 whitespace-pre-wrap break-words text-brand-ink">{message.message}</p>
+      <p className="mt-4 whitespace-pre-wrap break-words text-brand-ink">{thread.original_message}</p>
 
       <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-brand-line pt-4 text-sm">
-        {message.email && (
+        {thread.sender_email && (
           <li>
-            <a href={`mailto:${message.email}`} className={linkClass}>
-              {message.email}
+            <a href={`mailto:${thread.sender_email}`} className={linkClass}>
+              {thread.sender_email}
             </a>
           </li>
         )}
-        {message.phone && (
+        {thread.sender_phone && (
           <>
             <li>
-              <a href={`tel:${message.phone.replace(/[^\d+]/g, "")}`} className={linkClass}>
-                {message.phone}
+              <a href={`tel:${thread.sender_phone.replace(/[^\d+]/g, "")}`} className={linkClass}>
+                {thread.sender_phone}
               </a>
             </li>
             <li>
-              <a href={whatsappUrl(message.phone)} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                WhatsApp<span className="sr-only"> {message.name} (opens in a new tab)</span>
+              <a href={whatsappUrl(thread.sender_phone)} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                WhatsApp<span className="sr-only"> {thread.sender_name} (opens in a new tab)</span>
               </a>
             </li>
           </>
         )}
       </ul>
+
+      <div className="mt-5 border-t border-brand-line pt-4">
+        <ForwardForm threadId={thread.id} pastors={pastors} />
+      </div>
     </article>
   );
 }

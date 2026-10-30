@@ -6,6 +6,9 @@ import { CONTACT_LIMITS, isContactTopic } from "@/lib/contact";
 import { getSupabaseEnv, isSupabaseConfigured } from "@/lib/supabase/env";
 import type { Database } from "@/lib/types/database";
 
+// On success, the ticket for the sender's /threads/[ticket_id] link.
+export type ContactResult = { ok: true; ticketId: string } | Exclude<ActionResult, { ok: true }>;
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Digits with optional +, spaces, dashes and brackets, e.g. "+27 82 123 4567".
 const PHONE_PATTERN = /^\+?[\d\s()-]{5,30}$/;
@@ -15,11 +18,13 @@ function text(formData: FormData, name: string) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-// Saves a message from the public contact form. Visitors aren't signed in, so
-// this uses a cookie-less anon client; RLS lets anyone insert but only admins read.
-export async function submitContactMessage(formData: FormData): Promise<ActionResult> {
-  // Honeypot: hidden from people, so only bots fill it. Pretend it worked.
-  if (text(formData, "website")) return { ok: true };
+// Opens a conversation from the public contact form. Visitors aren't signed
+// in, so this uses a cookie-less anon client; RLS lets anyone insert but only
+// admins and the assigned pastor read.
+export async function submitContactMessage(formData: FormData): Promise<ContactResult> {
+  // Honeypot: hidden from people, so only bots fill it. Pretend it worked
+  // with a ticket that matches no thread.
+  if (text(formData, "website")) return { ok: true, ticketId: crypto.randomUUID() };
 
   const name = text(formData, "name");
   const email = text(formData, "email");
@@ -53,14 +58,21 @@ export async function submitContactMessage(formData: FormData): Promise<ActionRe
   const supabase = createClient<Database>(url, anonKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-  // No .select(): anon can't read rows back, so asking for them would fail.
-  const { error } = await supabase
-    .from("contact_messages")
-    .insert({ name, email: email || null, phone: phone || null, topic, message });
+  // The ticket is made here rather than by the column default because anon
+  // can't read rows back, so .select() after the insert would fail.
+  const ticketId = crypto.randomUUID();
+  const { error } = await supabase.from("contact_threads").insert({
+    ticket_id: ticketId,
+    sender_name: name,
+    sender_email: email || null,
+    sender_phone: phone || null,
+    topic,
+    original_message: message,
+  });
 
   if (error) {
     console.error("Couldn't save contact message:", error.message);
     return { ok: false, error: "Your message couldn't be sent. Please try again in a moment." };
   }
-  return { ok: true };
+  return { ok: true, ticketId };
 }

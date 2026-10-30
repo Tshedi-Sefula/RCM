@@ -1,12 +1,15 @@
 "use client";
 
 import { useActionState } from "react";
-import { login } from "@/app/admin/actions";
+import { login, type LoginState } from "@/app/admin/actions";
 import { inputClasses } from "@/components/admin/Field";
 import { Button } from "@/components/ui";
 
-export default function LoginForm() {
-  const [state, formAction, pending] = useActionState(login, undefined);
+type LoginAction = (prev: LoginState, formData: FormData) => Promise<LoginState>;
+
+// Admin sign-in by default; the pastor area passes its own action.
+export default function LoginForm({ action = login }: { action?: LoginAction }) {
+  const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
     <form action={formAction} className="space-y-5" noValidate>

@@ -2,11 +2,11 @@ import "server-only";
 import { requireAdmin } from "@/lib/auth";
 import { startOfToday, type QueryResult } from "@/lib/data/public";
 import { createClient } from "@/lib/supabase/server";
-import type { CalendarEntry, ChurchEvent, ContactMessage, GalleryImage, StreamVideo } from "@/lib/types/database";
+import type { CalendarEntry, ChurchEvent, ContactThread, GalleryImage, Profile, StreamVideo } from "@/lib/types/database";
 
 // A count is null when its query failed, so the dashboard can show "—".
 export type DashboardCounts = {
-  unreadMessages: number | null;
+  newMessages: number | null;
   upcomingEvents: number | null;
   calendarEntries: number | null;
   galleryImages: number | null;
@@ -20,7 +20,7 @@ export async function getDashboardCounts(): Promise<DashboardCounts> {
 
   // head: true returns only the count, no rows.
   const [messages, events, calendar, gallery, streams] = await Promise.all([
-    supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("is_read", false),
+    supabase.from("contact_threads").select("*", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("events").select("*", { count: "exact", head: true }).gte("event_date", startOfToday()),
     supabase.from("calendar_entries").select("*", { count: "exact", head: true }),
     supabase.from("gallery_images").select("*", { count: "exact", head: true }),
@@ -31,7 +31,7 @@ export async function getDashboardCounts(): Promise<DashboardCounts> {
     result.error ? null : (result.count ?? 0);
 
   return {
-    unreadMessages: count(messages),
+    newMessages: count(messages),
     upcomingEvents: count(events),
     calendarEntries: count(calendar),
     galleryImages: count(gallery),
@@ -81,13 +81,36 @@ export async function getAllStreamVideos(): Promise<QueryResult<StreamVideo[]>> 
   return error ? { data: null, error: error.message } : { data, error: null };
 }
 
-// Every contact form message, newest first.
-export async function getAllContactMessages(): Promise<QueryResult<ContactMessage[]>> {
+export type Pastor = Pick<Profile, "id" | "full_name" | "email">;
+
+// Every open contact thread, newest first, and the pastors they can be
+// forwarded to. Closed threads aren't listed.
+export async function getInboxThreads(): Promise<QueryResult<{ threads: ContactThread[]; pastors: Pastor[] }>> {
   await requireAdmin();
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("contact_messages")
-    .select("*")
-    .order("created_at", { ascending: false });
-  return error ? { data: null, error: error.message } : { data, error: null };
+  const [threads, pastors] = await Promise.all([
+    supabase.from("contact_threads").select("*").neq("status", "closed").order("created_at", { ascending: false }),
+    supabase.from("profiles").select("id, full_name, email").eq("role", "pastor").order("full_name"),
+  ]);
+  if (threads.error) return { data: null, error: threads.error.message };
+  if (pastors.error) return { data: null, error: pastors.error.message };
+  return { data: { threads: threads.data, pastors: pastors.data }, error: null };
+}
+
+// One thread and its pastor, for the "forwarded" confirmation.
+export async function getForwardedThread(id: string) {
+  await requireAdmin();
+  const supabase = await createClient();
+  const { data: thread } = await supabase
+    .from("contact_threads")
+    .select("sender_name, assigned_pastor_id")
+    .eq("id", id)
+    .maybeSingle();
+  if (!thread?.assigned_pastor_id) return null;
+  const { data: pastor } = await supabase
+    .from("profiles")
+    .select("full_name, email")
+    .eq("id", thread.assigned_pastor_id)
+    .maybeSingle();
+  return { senderName: thread.sender_name, pastorName: pastor?.full_name ?? pastor?.email ?? "the pastor" };
 }

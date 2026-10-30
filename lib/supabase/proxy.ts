@@ -3,18 +3,23 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured } from "./env";
 
 export const ADMIN_LOGIN_PATH = "/admin/login";
+export const PASTOR_LOGIN_PATH = "/pastor/login";
 
-// Everything under /admin except the login page needs a session.
-function isProtectedAdminPath(pathname: string) {
-  return (
-    (pathname === "/admin" || pathname.startsWith("/admin/")) &&
-    pathname !== ADMIN_LOGIN_PATH
-  );
+// Everything under /admin or /pastor except its login page needs a session.
+// Returns that area's login page, or null for paths anyone may open.
+function loginPathFor(pathname: string) {
+  for (const [area, login] of [
+    ["/admin", ADMIN_LOGIN_PATH],
+    ["/pastor", PASTOR_LOGIN_PATH],
+  ]) {
+    if ((pathname === area || pathname.startsWith(`${area}/`)) && pathname !== login) return login;
+  }
+  return null;
 }
 
-function redirectToLogin(request: NextRequest, from?: NextResponse) {
+function redirectToLogin(request: NextRequest, loginPath: string, from?: NextResponse) {
   const url = request.nextUrl.clone();
-  url.pathname = ADMIN_LOGIN_PATH;
+  url.pathname = loginPath;
   url.search = "";
   const redirect = NextResponse.redirect(url);
   // Keep any refreshed (or cleared) auth cookies on the redirect.
@@ -23,16 +28,17 @@ function redirectToLogin(request: NextRequest, from?: NextResponse) {
 }
 
 // Refreshes the Supabase auth session and keeps request/response cookies in sync,
-// then sends signed-out visitors on protected admin pages to the login page.
-// This is an optimistic check only: admin pages and actions verify the user
-// again (and check profiles.is_admin) via lib/auth.ts.
+// then sends signed-out visitors on protected pages to their login page, and
+// signed-in users without the pastor role away from /pastor.
+// This is an optimistic check only: admin and pastor pages and actions verify
+// the user again (profiles.is_admin / profiles.role) via lib/auth.ts.
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
-  const { pathname } = request.nextUrl;
+  const loginPath = loginPathFor(request.nextUrl.pathname);
 
-  // Without Supabase nobody can be signed in, so admin pages are off-limits.
+  // Without Supabase nobody can be signed in, so protected pages are off-limits.
   if (!isSupabaseConfigured) {
-    return isProtectedAdminPath(pathname) ? redirectToLogin(request) : response;
+    return loginPath ? redirectToLogin(request, loginPath) : response;
   }
 
   const supabase = createServerClient(
@@ -61,8 +67,12 @@ export async function updateSession(request: NextRequest) {
   // it revalidates the token and triggers setAll when it needs refreshing.
   const { data } = await supabase.auth.getClaims();
 
-  if (!data?.claims && isProtectedAdminPath(pathname)) {
-    return redirectToLogin(request, response);
+  if (!loginPath) return response;
+  if (!data?.claims) return redirectToLogin(request, loginPath, response);
+
+  if (loginPath === PASTOR_LOGIN_PATH) {
+    const { data: isPastor } = await supabase.rpc("is_pastor");
+    if (!isPastor) return redirectToLogin(request, loginPath, response);
   }
 
   return response;

@@ -9,7 +9,7 @@ import { getDashboardCounts, type DashboardCounts } from "@/lib/data/admin";
 export const metadata: Metadata = { title: "Admin dashboard" };
 
 const stats: { key: keyof DashboardCounts; label: string; href: string }[] = [
-  { key: "unreadMessages", label: "Unread messages", href: "/admin/messages" },
+  { key: "newMessages", label: "Messages to forward", href: "/admin/messages" },
   { key: "upcomingEvents", label: "Upcoming events", href: "/admin/events" },
   { key: "calendarEntries", label: "Calendar entries", href: "/admin/calendar" },
   { key: "galleryImages", label: "Gallery images", href: "/admin/gallery" },
