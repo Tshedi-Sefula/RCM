@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { cache } from "react";
 import { ADMIN_LOGIN_PATH } from "@/lib/supabase/proxy";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -14,6 +15,10 @@ export type AdminUser = { id: string; email: string };
 export const getAdminUser = cache(async (): Promise<AdminUser | null> => {
   if (!isSupabaseConfigured) return null;
 
+  // getClaims() checks the token's expiry with Date.now(). With partial
+  // prefetching, cookies resolve while the shell prerenders, so defer to
+  // request time first; the admin check should never be prerendered anyway.
+  await connection();
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const claims = data?.claims;

@@ -4,7 +4,11 @@ import GalleryGrid from "@/components/GalleryGrid";
 import { Container, Hero, Notice } from "@/components/ui";
 import { getGalleryImages } from "@/lib/data/public";
 
-export const metadata: Metadata = { title: "Gallery" };
+export const metadata: Metadata = {
+  title: "Gallery",
+  description: "Photos from services, events and community life at RCM Toitskraal.",
+  alternates: { canonical: "/gallery" },
+};
 
 export default function GalleryPage() {
   return (

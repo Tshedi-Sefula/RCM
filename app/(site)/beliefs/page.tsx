@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Hero from "@/components/ui/Hero";
 
-export const metadata: Metadata = { title: "Our Beliefs" };
+export const metadata: Metadata = {
+  title: "Our Beliefs",
+  description:
+    "Our vision, mission, leadership and statement of faith at Restoration Center Ministries Toitskraal.",
+  alternates: { canonical: "/beliefs" },
+};
 
 const sections = [
   {

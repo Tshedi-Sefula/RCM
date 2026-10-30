@@ -8,7 +8,7 @@ type HeroProps = {
   title: string;
   subtitle?: string;
   eyebrow?: string;
-  // Background photo; without one a warm navy gradient is used.
+  // Background photo; without one a deep blue gradient is used.
   image?: string;
   // CTAs, e.g. one or two <Button>s with tone="inverse".
   actions?: ReactNode;
@@ -43,7 +43,7 @@ export default function Hero({
           "absolute inset-0 -z-10",
           image
             ? "bg-gradient-to-b from-brand-primary/80 via-brand-primary/65 to-brand-primary/90"
-            : "bg-[radial-gradient(ellipse_at_top_right,rgb(201_162_39/0.28),transparent_55%),linear-gradient(160deg,#1e293b,#0f172a)]",
+            : "bg-[radial-gradient(ellipse_at_top_right,rgb(201_162_39/0.28),transparent_55%),linear-gradient(160deg,#1a2b4c,#0e1a33)]",
         )}
       />
 

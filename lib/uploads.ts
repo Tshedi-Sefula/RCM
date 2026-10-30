@@ -29,3 +29,8 @@ export function newImagePath(file: File) {
 // Only paths made by newImagePath are accepted from forms.
 export const IMAGE_PATH_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp|avif)$/;
+
+// Gallery uploads: how many photos one form submission may add, and the
+// longest caption it may give them.
+export const GALLERY_MAX_FILES = 20;
+export const CAPTION_MAX_LENGTH = 300;

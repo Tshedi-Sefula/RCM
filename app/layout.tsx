@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -16,11 +16,24 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: {
     default: `Welcome to ${site.name}`,
     template: `%s | ${site.shortName}`,
   },
-  description: "We are a community of believers passionate about Jesus and people.",
+  description: site.description,
+  applicationName: site.name,
+  // Defaults for every page; the home page adds its own image.
+  openGraph: {
+    type: "website",
+    locale: "en_ZA",
+    siteName: site.name,
+  },
+  twitter: { card: "summary_large_image" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1a2b4c",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

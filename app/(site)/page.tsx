@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import StreamEmbed from "@/components/StreamEmbed";
@@ -11,6 +12,30 @@ const streamDateFormat = new Intl.DateTimeFormat("en-ZA", {
   year: "numeric",
   timeZone: site.timeZone,
 });
+
+const homeTitle = `Welcome to ${site.name}`;
+
+export const metadata: Metadata = {
+  // The root layout's default title, without the "| RCM Toitskraal" suffix.
+  title: { absolute: homeTitle },
+  description: site.description,
+  alternates: { canonical: "/" },
+  // openGraph replaces the layout's object rather than merging, so repeat its fields.
+  openGraph: {
+    type: "website",
+    locale: "en_ZA",
+    siteName: site.name,
+    title: homeTitle,
+    description: site.description,
+    url: "/",
+    images: [{ url: "/images/hero.jpg", alt: `${site.name} congregation` }],
+  },
+  twitter: {
+    title: homeTitle,
+    description: site.description,
+    images: ["/images/hero.jpg"],
+  },
+};
 
 export default function Home() {
   return (

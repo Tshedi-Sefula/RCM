@@ -5,7 +5,11 @@ import EventCard from "@/components/EventCard";
 import { Container, Hero, Notice } from "@/components/ui";
 import { getUpcomingEvents } from "@/lib/data/public";
 
-export const metadata: Metadata = { title: "Upcoming Events" };
+export const metadata: Metadata = {
+  title: "Upcoming Events",
+  description: "Conferences, outreaches and special services coming up at RCM Toitskraal.",
+  alternates: { canonical: "/events" },
+};
 
 export default function EventsPage() {
   return (

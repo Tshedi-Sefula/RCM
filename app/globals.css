@@ -7,8 +7,8 @@
  * Each token becomes Tailwind utilities, e.g. `bg-brand-primary`,
  * `text-brand-muted`, `border-brand-accent`, `ring-brand-accent`.
  *
- * brand-primary        Deep navy. Header, footer, dark sections, headings.
- * brand-primary-soft   Lighter navy for hover states on dark surfaces.
+ * brand-primary        Deep blue. Header, footer, dark sections, headings.
+ * brand-primary-soft   Lighter blue for hover states on dark surfaces.
  * brand-accent         Warm gold. CTA fills, highlights, focus rings.
  *                      Use with brand-ink text (6.3:1). Do NOT use as text
  *                      on light backgrounds (fails WCAG AA).
@@ -23,8 +23,8 @@
  *                      *-soft are background tints).
  */
 @theme {
-  --color-brand-primary: #1e293b;
-  --color-brand-primary-soft: #334155;
+  --color-brand-primary: #1a2b4c;
+  --color-brand-primary-soft: #2b4170;
   --color-brand-accent: #c9a227;
   --color-brand-accent-strong: #85650f;
   --color-brand-accent-soft: #f5ecd0;

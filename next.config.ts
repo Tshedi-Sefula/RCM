@@ -1,5 +1,16 @@
 import type { NextConfig } from "next";
 
+// Allow next/image to optimise files from this project's Supabase storage.
+// Falls back to any *.supabase.co host when the URL isn't set (e.g. a build
+// without env vars), which lib/media.ts's isOptimizableImage() also accepts.
+const supabaseHost = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").hostname;
+  } catch {
+    return "*.supabase.co";
+  }
+})();
+
 const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
@@ -9,7 +20,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.supabase.co",
+        hostname: supabaseHost,
         pathname: "/storage/v1/object/public/**",
       },
     ],

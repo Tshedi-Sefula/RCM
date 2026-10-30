@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Hero from "@/components/ui/Hero";
 import ContactForm from "@/components/ContactForm";
 
-export const metadata: Metadata = { title: "Contact" };
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Get in touch with RCM Toitskraal for questions, prayer requests or to find out how to join us.",
+  alternates: { canonical: "/contact" },
+};
 
 export default function ContactPage() {
   return (

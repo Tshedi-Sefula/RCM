@@ -1,6 +1,18 @@
+// The public address of the site, used for canonical URLs, Open Graph tags,
+// robots.txt and the sitemap. Set NEXT_PUBLIC_SITE_URL once you have a custom
+// domain; on Vercel it falls back to the project's production domain.
+function siteUrl() {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  return "http://localhost:3000";
+}
+
 export const site = {
   name: "Restoration Center Ministries Toitskraal",
   shortName: "RCM Toitskraal",
+  url: siteUrl(),
+  description:
+    "Restoration Center Ministries Toitskraal is a community of believers passionate about Jesus and people. Join us for Sunday and midweek services in Toitskraal, Mpumalanga.",
   copyright: "© 2026 Restoration Center Ministries Toitskraal",
   spotifyUrl:
     "https://open.spotify.com/artist/2n5wafdQFWEOKTK3vc9Cwf?si=z3knZ89NTbO0VHz2pDB6dg",

@@ -7,7 +7,11 @@ import { getCalendarEntries } from "@/lib/data/public";
 import { placeholderCalendarEntries } from "@/lib/placeholder-events";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
-export const metadata: Metadata = { title: "Calendar" };
+export const metadata: Metadata = {
+  title: "Calendar",
+  description: "Services, special events and public holidays on the RCM Toitskraal church calendar.",
+  alternates: { canonical: "/calendar" },
+};
 
 export default function CalendarPage() {
   return (
