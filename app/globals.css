@@ -1,26 +1,115 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Brand tokens
+ * ------------------------------------------------------------------
+ * Each token becomes Tailwind utilities, e.g. `bg-brand-primary`,
+ * `text-brand-muted`, `border-brand-accent`, `ring-brand-accent`.
+ *
+ * brand-primary        Deep navy. Header, footer, dark sections, headings.
+ * brand-primary-soft   Lighter navy for hover states on dark surfaces.
+ * brand-accent         Warm gold. CTA fills, highlights, focus rings.
+ *                      Use with brand-ink text (6.3:1). Do NOT use as text
+ *                      on light backgrounds (fails WCAG AA).
+ * brand-accent-strong  Darker gold for text/links on light backgrounds (≥4.5:1).
+ * brand-accent-soft    Pale gold tint for badges and subtle highlights.
+ * brand-surface        Off-white page background.
+ * brand-cream          Warmer alternate section background.
+ * brand-ink            Body text colour on light backgrounds.
+ * brand-muted          Secondary text on light backgrounds (5:1 on surface).
+ * brand-line           Hairline borders and dividers.
+ * success / error      Form feedback (text colours pass AA on white;
+ *                      *-soft are background tints).
+ */
+@theme {
+  --color-brand-primary: #1e293b;
+  --color-brand-primary-soft: #334155;
+  --color-brand-accent: #c9a227;
+  --color-brand-accent-strong: #85650f;
+  --color-brand-accent-soft: #f5ecd0;
+  --color-brand-surface: #faf8f4;
+  --color-brand-cream: #f3eee4;
+  --color-brand-ink: #1c1917;
+  --color-brand-muted: #6b6b6b;
+  --color-brand-line: #e7e1d6;
+
+  --color-success: #15803d;
+  --color-success-soft: #dcfce7;
+  --color-error: #b91c1c;
+  --color-error-soft: #fee2e2;
+
+  --color-spotify: #1db954;
+
+  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 4px 16px rgb(28 25 23 / 0.06);
+  --shadow-card-hover: 0 2px 4px rgb(28 25 23 / 0.05), 0 12px 32px rgb(28 25 23 / 0.1);
 }
 
+/* Fonts are loaded with next/font in app/layout.tsx. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-surface text-brand-ink leading-relaxed;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-accent;
+  }
+
+  ::selection {
+    @apply bg-brand-accent-soft text-brand-ink;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Scroll reveal (see components/ui/Reveal.tsx). */
+.reveal {
+  transition:
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-visible="false"] {
+  opacity: 0;
+  transform: translateY(1.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal[data-visible="false"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* FullCalendar: match brand colours */
+.fc {
+  --fc-button-bg-color: var(--color-brand-primary);
+  --fc-button-border-color: var(--color-brand-primary);
+  --fc-button-hover-bg-color: var(--color-brand-primary-soft);
+  --fc-button-hover-border-color: var(--color-brand-primary-soft);
+  --fc-button-active-bg-color: var(--color-brand-primary-soft);
+  --fc-button-active-border-color: var(--color-brand-primary-soft);
+  --fc-event-bg-color: var(--color-brand-accent);
+  --fc-event-border-color: var(--color-brand-accent);
+  --fc-event-text-color: var(--color-brand-ink);
+  --fc-today-bg-color: var(--color-brand-accent-soft);
+  --fc-border-color: var(--color-brand-line);
+}
+
+.fc .fc-toolbar-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
 }
