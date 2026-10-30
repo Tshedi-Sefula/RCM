@@ -105,8 +105,22 @@ export default function Footer() {
       </Container>
 
       <div className="border-t border-white/10">
-        <Container className="py-6 text-center text-xs text-white/50">
+        <Container className="flex flex-col items-center gap-3 py-6 text-center text-xs text-white/50 sm:flex-row sm:justify-between sm:text-left">
           <p>{site.copyright}</p>
+          <Link
+            href="/login"
+            rel="nofollow"
+            className="inline-flex items-center gap-1.5 transition-colors hover:text-white focus-visible:text-white"
+          >
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className="size-3.5">
+              <path
+                fillRule="evenodd"
+                d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Pastor &amp; staff login
+          </Link>
         </Container>
       </div>
     </footer>

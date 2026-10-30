@@ -2,7 +2,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { cache } from "react";
-import { ADMIN_LOGIN_PATH, PASTOR_LOGIN_PATH } from "@/lib/supabase/proxy";
+import { LOGIN_PATH } from "@/lib/supabase/proxy";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 
@@ -33,7 +33,7 @@ export const getAdminUser = cache(async (): Promise<AdminUser | null> => {
 // Returns the signed-in admin, or redirects to the login page.
 export async function requireAdmin(): Promise<AdminUser> {
   const user = await getAdminUser();
-  if (!user) redirect(ADMIN_LOGIN_PATH);
+  if (!user) redirect(LOGIN_PATH);
   return user;
 }
 
@@ -61,9 +61,9 @@ export const getPastorUser = cache(async (): Promise<PastorUser | null> => {
   return { id: claims.sub, email: claims.email ?? "", fullName: profile.full_name };
 });
 
-// Returns the signed-in pastor, or redirects to the pastor login page.
+// Returns the signed-in pastor, or redirects to the login page.
 export async function requirePastor(): Promise<PastorUser> {
   const user = await getPastorUser();
-  if (!user) redirect(PASTOR_LOGIN_PATH);
+  if (!user) redirect(LOGIN_PATH);
   return user;
 }

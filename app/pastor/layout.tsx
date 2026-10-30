@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// Pages add the dashboard chrome with <PastorLayout>; the login page has none.
+// Pages add the dashboard chrome with <PastorLayout>.
 export default function PastorRootLayout({ children }: LayoutProps<"/pastor">) {
   return children;
 }

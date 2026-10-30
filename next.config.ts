@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  // The admin and pastor areas share one login page now; keep old links working.
+  // Config redirects run before proxy.ts, so these never hit the auth check.
+  async redirects() {
+    return [
+      { source: "/admin/login", destination: "/login", permanent: true },
+      { source: "/pastor/login", destination: "/login", permanent: true },
+    ];
+  },
   images: {
     // Public files from the event-posters and gallery storage buckets.
     remotePatterns: [

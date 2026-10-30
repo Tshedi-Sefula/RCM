@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { pastorLogin } from "@/app/pastor/actions";
-import LoginForm from "@/components/admin/LoginForm";
+import LoginForm from "@/components/LoginForm";
 import { Card, Heading, Notice } from "@/components/ui";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = {
+  title: "Staff login",
+  robots: { index: false, follow: false },
+};
 
-export default function PastorLoginPage() {
+// One sign-in for admins and pastors; staffLogin sends each to their dashboard.
+export default function LoginPage() {
   return (
     <main id="main" className="flex flex-1 items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
@@ -19,13 +22,13 @@ export default function PastorLoginPage() {
             {site.shortName}
           </p>
           <Heading level={1} size={2} className="mt-2">
-            Pastor sign in
+            Staff &amp; Pastor Login
           </Heading>
         </div>
 
         {isSupabaseConfigured ? (
           <Card>
-            <LoginForm action={pastorLogin} />
+            <LoginForm />
           </Card>
         ) : (
           <Notice tone="error" title="Supabase is not configured">
