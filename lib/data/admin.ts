@@ -1,7 +1,8 @@
 import "server-only";
 import { requireAdmin } from "@/lib/auth";
-import { startOfToday } from "@/lib/data/public";
+import { startOfToday, type QueryResult } from "@/lib/data/public";
 import { createClient } from "@/lib/supabase/server";
+import type { CalendarEntry, ChurchEvent } from "@/lib/types/database";
 
 // A count is null when its query failed, so the dashboard can show "—".
 export type DashboardCounts = {
@@ -33,4 +34,23 @@ export async function getDashboardCounts(): Promise<DashboardCounts> {
     galleryImages: count(gallery),
     streamVideos: count(streams),
   };
+}
+
+// Every event, newest first, for the admin list. Not cached, like the counts.
+export async function getAllEvents(): Promise<QueryResult<ChurchEvent[]>> {
+  await requireAdmin();
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("events").select("*").order("event_date", { ascending: false });
+  return error ? { data: null, error: error.message } : { data, error: null };
+}
+
+// Every calendar entry, latest start date first.
+export async function getAllCalendarEntries(): Promise<QueryResult<CalendarEntry[]>> {
+  await requireAdmin();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("calendar_entries")
+    .select("*")
+    .order("start_date", { ascending: false });
+  return error ? { data: null, error: error.message } : { data, error: null };
 }

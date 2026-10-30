@@ -2,10 +2,8 @@
 
 import { useActionState } from "react";
 import { login } from "@/app/admin/actions";
+import { inputClasses } from "@/components/admin/Field";
 import { Button } from "@/components/ui";
-
-const inputClasses =
-  "mt-1.5 block h-11 w-full rounded-lg border border-brand-line bg-white px-3.5 text-brand-ink transition focus:border-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent/30";
 
 export default function LoginForm() {
   const [state, formAction, pending] = useActionState(login, undefined);

@@ -16,6 +16,18 @@ export function isOptimizableImage(url: string) {
   }
 }
 
+// The object path inside `bucket` for one of its public URLs, so the file
+// can be removed later. Null when the URL points anywhere else.
+export function storagePathFromPublicUrl(url: string, bucket: string) {
+  try {
+    const { pathname } = new URL(url);
+    const prefix = `/storage/v1/object/public/${bucket}/`;
+    return pathname.startsWith(prefix) ? decodeURIComponent(pathname.slice(prefix.length)) : null;
+  } catch {
+    return null;
+  }
+}
+
 // Accepts a bare video ID or any common YouTube URL
 // (watch?v=, youtu.be/, /embed/, /live/, /shorts/).
 export function youtubeVideoId(idOrUrl: string) {
