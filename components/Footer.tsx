@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import SocialLink from "@/components/SocialLink";
+import FacebookLink from "@/components/FacebookLink";
 import SpotifyLink from "@/components/SpotifyLink";
-import FacebookIcon from "@/components/icons/FacebookIcon";
-import YouTubeIcon from "@/components/icons/YouTubeIcon";
+import YouTubeLink from "@/components/YouTubeLink";
 import BrandStripe from "@/components/ui/BrandStripe";
 import Container from "@/components/ui/Container";
 import { navLinks, site } from "@/lib/site";
@@ -12,30 +11,8 @@ const socialRing = "border border-white/15";
 
 const socialLinks = [
   { label: "Listen on Spotify", link: <SpotifyLink className={socialRing} /> },
-  {
-    label: "Watch on YouTube",
-    link: (
-      <SocialLink
-        href={site.youtubeUrl}
-        label="Watch on YouTube"
-        icon={<YouTubeIcon className="size-5" />}
-        brandClassName="hover:text-youtube focus-visible:text-youtube"
-        className={socialRing}
-      />
-    ),
-  },
-  {
-    label: "Follow on Facebook",
-    link: (
-      <SocialLink
-        href={site.facebookUrl}
-        label="Follow on Facebook"
-        icon={<FacebookIcon className="size-5" />}
-        brandClassName="hover:text-facebook focus-visible:text-facebook"
-        className={socialRing}
-      />
-    ),
-  },
+  { label: "Watch on YouTube", link: <YouTubeLink className={socialRing} /> },
+  { label: "Follow on Facebook", link: <FacebookLink className={socialRing} /> },
 ];
 
 const headingClass = "text-xs font-bold uppercase tracking-[0.22em] text-brand-accent-light";

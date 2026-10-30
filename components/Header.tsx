@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import FacebookLink from "@/components/FacebookLink";
 import SpotifyLink from "@/components/SpotifyLink";
+import YouTubeLink from "@/components/YouTubeLink";
 import BrandStripe from "@/components/ui/BrandStripe";
 import Container from "@/components/ui/Container";
 import { cn } from "@/lib/cn";
@@ -84,8 +86,13 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-1 md:border-l md:border-white/15 md:pl-3">
-          <SpotifyLink />
+        <div className="flex items-center gap-1">
+          {/* Divider sets the social icons apart from the page links. */}
+          <div className="flex items-center gap-0.5 sm:gap-1 md:border-l md:border-white/15 md:pl-3">
+            <SpotifyLink />
+            <YouTubeLink />
+            <FacebookLink />
+          </div>
           <button
             type="button"
             className="inline-flex size-10 items-center justify-center rounded-full hover:bg-white/10 md:hidden"
@@ -127,9 +134,19 @@ export default function Header() {
                 </Link>
               </li>
             ))}
-            <li className="mt-2 flex items-center gap-2 border-t border-white/10 px-1 pt-3">
-              <SpotifyLink />
-              <span className="text-sm text-white/80">Listen on Spotify</span>
+            <li className="mt-2 border-t border-white/10 px-1 pt-3">
+              <ul className="space-y-1">
+                {[
+                  { label: "Listen on Spotify", link: <SpotifyLink /> },
+                  { label: "Watch on YouTube", link: <YouTubeLink /> },
+                  { label: "Follow on Facebook", link: <FacebookLink /> },
+                ].map((social) => (
+                  <li key={social.label} className="flex items-center gap-2">
+                    {social.link}
+                    <span className="text-sm text-white/80">{social.label}</span>
+                  </li>
+                ))}
+              </ul>
             </li>
           </ul>
         </nav>
