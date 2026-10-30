@@ -41,13 +41,20 @@ export const site = {
     { title: "Sunday Service", weekday: 0, startTime: "09:00", endTime: "12:00" },
   ],
   // Home page "Our Fellowships" cards. Placeholders: edit the names,
-  // descriptions and photos to match the church's ministries.
+  // descriptions and photos to match the church's ministries. A card
+  // without an image shows a branded placeholder panel instead.
   fellowships: [
     {
       title: "Restoration Kids",
       description:
         "A safe, joyful space for children to learn about Jesus through stories, songs and play while parents join the service.",
       image: "/images/img1.jpg",
+    },
+    {
+      title: "RCM Youth",
+      description:
+        "Empowering the next generation to grow in faith, build meaningful friendships and discover their purpose in Christ.",
+      image: null,
     },
     {
       title: "Women of Purpose",

@@ -84,19 +84,24 @@ export default function Home() {
         <SectionHeader eyebrow="Fellowships" title="Our Fellowships">
           There is a place for every age and season of life. Find your people and grow together.
         </SectionHeader>
-        <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Flex rather than grid so a short last row stays centred. */}
+        <ul className="mt-14 flex flex-wrap justify-center gap-6">
           {site.fellowships.map((f, i) => (
-            <li key={f.title}>
+            <li key={f.title} className="w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]">
               <Reveal delay={i * 80} className="h-full">
                 <Card interactive padded={false} className="group flex h-full flex-col">
                   <div className="relative aspect-[4/3] overflow-hidden bg-brand-cream">
-                    <Image
-                      src={f.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover transition duration-500 group-hover:scale-105 motion-reduce:transition-none"
-                    />
+                    {f.image ? (
+                      <Image
+                        src={f.image}
+                        alt=""
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover transition duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                      />
+                    ) : (
+                      <FellowshipPlaceholder title={f.title} />
+                    )}
                   </div>
                   <div className="flex flex-1 flex-col p-6">
                     <Heading level={3} size={4} className="text-xl">
@@ -214,6 +219,38 @@ function ValuesMarquee() {
         {row(false)}
         {row(true)}
       </div>
+    </div>
+  );
+}
+
+// Stand-in for a fellowship card photo, in the same dark-and-maroon look as
+// the prayer banner. Replace by giving the fellowship an image in lib/site.ts.
+function FellowshipPlaceholder({ title }: { title: string }) {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-brand-primary text-white">
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgb(142_27_32/0.55),transparent_60%),radial-gradient(ellipse_at_bottom_right,rgb(30_58_110/0.45),transparent_55%)] transition duration-500 group-hover:scale-105 motion-reduce:transition-none"
+      />
+      {/* Group of people */}
+      <svg
+        aria-hidden
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="relative size-14 text-brand-accent-light"
+      >
+        <circle cx="12" cy="7" r="3" />
+        <path d="M6.5 20v-1.5a5.5 5.5 0 0 1 11 0V20" />
+        <circle cx="5" cy="9.5" r="2" />
+        <path d="M1.5 19v-.8A3.5 3.5 0 0 1 6 14.9" />
+        <circle cx="19" cy="9.5" r="2" />
+        <path d="M22.5 19v-.8a3.5 3.5 0 0 0-4.5-3.3" />
+      </svg>
+      <span className="relative text-sm font-bold uppercase tracking-[0.22em] text-white/80">{title}</span>
     </div>
   );
 }
