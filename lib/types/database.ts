@@ -6,6 +6,7 @@
 
 export type CalendarCategory = "service" | "special" | "holiday" | "other";
 export type StreamPlatform = "youtube" | "facebook";
+export type ContactTopic = "general" | "prayer" | "visit";
 
 export type ChurchEvent = {
   id: string;
@@ -45,6 +46,17 @@ export type StreamVideo = {
   created_at: string;
 };
 
+export type ContactMessage = {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  topic: ContactTopic;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+};
+
 export type Profile = {
   id: string;
   full_name: string | null;
@@ -75,6 +87,7 @@ export type Database = {
       calendar_entries: Table<CalendarEntry, "id" | "end_date" | "description" | "category" | "created_at">;
       gallery_images: Table<GalleryImage, "id" | "caption" | "uploaded_at">;
       stream_videos: Table<StreamVideo, "id" | "is_memorable" | "stream_date" | "created_at">;
+      contact_messages: Table<ContactMessage, "id" | "email" | "phone" | "topic" | "is_read" | "created_at">;
       profiles: Table<Profile, "full_name" | "is_admin" | "created_at">;
     };
     Views: { [_ in never]: never };

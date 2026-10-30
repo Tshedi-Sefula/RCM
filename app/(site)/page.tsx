@@ -235,7 +235,7 @@ function PrayerBanner() {
             Whatever you are facing, you don&apos;t have to face it alone. Send us your request and our prayer team will
             stand with you.
           </p>
-          <Button href="/contact" size="lg" className="mt-10 min-w-56">
+          <Button href="/contact?topic=prayer" size="lg" className="mt-10 min-w-56">
             Request Prayer
           </Button>
         </Reveal>

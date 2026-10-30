@@ -1,12 +1,14 @@
 # RCM Toitskraal website
 
 The website for Restoration Center Ministries Toitskraal, with an admin dashboard for
-managing events, the church calendar, gallery photos and stream videos.
+managing events, the church calendar, gallery photos and stream videos, and an inbox for
+messages and prayer requests from the contact form.
 
 Next.js 16 (App Router) + Tailwind CSS v4 + Supabase (Postgres, Auth, Storage).
 
 - **Public pages:** Home (with the latest stream), Beliefs, Events, Calendar, Gallery, Contact.
 - **Admin:** `/admin` — sign in to add, edit and delete content. Changes show on the public site immediately.
+  Contact form messages arrive under **Messages**; the dashboard shows how many are unread.
 
 ## Local setup
 
@@ -41,6 +43,7 @@ Migrations are in `supabase/migrations/` and must run in filename order:
 
 1. `20261030000000_init_schema.sql` — `profiles`, `events`, `calendar_entries`, `gallery_images`, `stream_videos`, RLS policies, `is_admin()` helper.
 2. `20261030000100_storage.sql` — `event-posters` and `gallery` storage buckets (public, 10 MB limit, JPEG/PNG/WebP/AVIF) and their policies.
+3. `20261030000200_contact_messages.sql` — `contact_messages` for the contact form: anyone can submit, only admins can read.
 
 **Option A — SQL editor (no tooling):** Dashboard → **SQL Editor** → New query → paste the
 contents of each file → Run. Do them in order.
@@ -53,7 +56,7 @@ npx supabase link --project-ref <your-project-ref>
 npx supabase db push
 ```
 
-Both migrations are safe to re-run.
+All migrations are safe to re-run.
 
 ### 4. Create an admin user
 
@@ -95,6 +98,8 @@ or set a new one from the same menu.
 - Everyone (signed in or not) can **read** the four content tables and both buckets.
 - Only signed-in users with `profiles.is_admin = true` can **insert / update / delete**.
 - A `profiles` row is created automatically when a user is added.
+- `contact_messages` is the exception: anyone can **insert** a message, but only admins can **read**, update
+  or delete them, so prayer requests stay private.
 
 ## Deploying to Vercel
 

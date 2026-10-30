@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 
 export const adminLinks = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/messages", label: "Messages" },
   { href: "/admin/events", label: "Upcoming Events" },
   { href: "/admin/calendar", label: "Calendar Entries" },
   { href: "/admin/gallery", label: "Gallery Images" },

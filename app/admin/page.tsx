@@ -9,6 +9,7 @@ import { getDashboardCounts, type DashboardCounts } from "@/lib/data/admin";
 export const metadata: Metadata = { title: "Admin dashboard" };
 
 const stats: { key: keyof DashboardCounts; label: string; href: string }[] = [
+  { key: "unreadMessages", label: "Unread messages", href: "/admin/messages" },
   { key: "upcomingEvents", label: "Upcoming events", href: "/admin/events" },
   { key: "calendarEntries", label: "Calendar entries", href: "/admin/calendar" },
   { key: "galleryImages", label: "Gallery images", href: "/admin/gallery" },
@@ -39,7 +40,7 @@ async function Dashboard() {
         site right now.
       </p>
 
-      <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {stats.map((stat) => (
           <li key={stat.key}>
             <Link href={stat.href} className="block h-full rounded-2xl">
@@ -65,7 +66,7 @@ function DashboardSkeleton() {
     <div aria-hidden>
       <div className="h-10 w-64 animate-pulse rounded bg-brand-cream" />
       <div className="mt-3 h-5 w-80 max-w-full animate-pulse rounded bg-brand-cream" />
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {stats.map((stat) => (
           <div key={stat.key} className="h-32 animate-pulse rounded-2xl bg-brand-cream" />
         ))}

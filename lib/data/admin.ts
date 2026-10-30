@@ -2,10 +2,11 @@ import "server-only";
 import { requireAdmin } from "@/lib/auth";
 import { startOfToday, type QueryResult } from "@/lib/data/public";
 import { createClient } from "@/lib/supabase/server";
-import type { CalendarEntry, ChurchEvent, GalleryImage, StreamVideo } from "@/lib/types/database";
+import type { CalendarEntry, ChurchEvent, ContactMessage, GalleryImage, StreamVideo } from "@/lib/types/database";
 
 // A count is null when its query failed, so the dashboard can show "—".
 export type DashboardCounts = {
+  unreadMessages: number | null;
   upcomingEvents: number | null;
   calendarEntries: number | null;
   galleryImages: number | null;
@@ -18,7 +19,8 @@ export async function getDashboardCounts(): Promise<DashboardCounts> {
   const supabase = await createClient();
 
   // head: true returns only the count, no rows.
-  const [events, calendar, gallery, streams] = await Promise.all([
+  const [messages, events, calendar, gallery, streams] = await Promise.all([
+    supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("is_read", false),
     supabase.from("events").select("*", { count: "exact", head: true }).gte("event_date", startOfToday()),
     supabase.from("calendar_entries").select("*", { count: "exact", head: true }),
     supabase.from("gallery_images").select("*", { count: "exact", head: true }),
@@ -29,6 +31,7 @@ export async function getDashboardCounts(): Promise<DashboardCounts> {
     result.error ? null : (result.count ?? 0);
 
   return {
+    unreadMessages: count(messages),
     upcomingEvents: count(events),
     calendarEntries: count(calendar),
     galleryImages: count(gallery),
@@ -74,6 +77,17 @@ export async function getAllStreamVideos(): Promise<QueryResult<StreamVideo[]>> 
     .from("stream_videos")
     .select("*")
     .order("stream_date", { ascending: false, nullsFirst: false })
+    .order("created_at", { ascending: false });
+  return error ? { data: null, error: error.message } : { data, error: null };
+}
+
+// Every contact form message, newest first.
+export async function getAllContactMessages(): Promise<QueryResult<ContactMessage[]>> {
+  await requireAdmin();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("contact_messages")
+    .select("*")
     .order("created_at", { ascending: false });
   return error ? { data: null, error: error.message } : { data, error: null };
 }
