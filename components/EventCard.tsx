@@ -29,7 +29,8 @@ export default function EventCard({ event }: { event: ChurchEvent }) {
           href={event.poster_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative block aspect-[4/5] bg-brand-cream"
+          // Posters carry the details, so show them whole (contain, not cover).
+          className="group relative block aspect-[4/5] bg-brand-primary"
           aria-label={`Open the poster for ${event.title} in a new tab`}
         >
           <Image
@@ -38,7 +39,7 @@ export default function EventCard({ event }: { event: ChurchEvent }) {
             fill
             unoptimized={!isOptimizableImage(event.poster_url)}
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
+            className="object-contain transition duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
           />
         </a>
       )}
