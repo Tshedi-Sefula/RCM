@@ -7,26 +7,28 @@ type Size = "sm" | "md" | "lg";
 // `inverse` adapts secondary/ghost for dark backgrounds (hero, footer).
 type Tone = "default" | "inverse";
 
+// Slightly rounded corners, matching the reference site's 6–8px radius.
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold tracking-wide transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none";
 
 const sizes: Record<Size, string> = {
   sm: "h-9 px-4 text-sm",
   md: "h-11 px-6 text-base",
-  lg: "h-13 px-8 text-lg",
+  lg: "h-14 px-8 text-base sm:text-lg",
 };
 
 const variants: Record<Variant, Record<Tone, string>> = {
   primary: {
     default:
-      "bg-brand-accent text-brand-ink shadow-sm hover:-translate-y-0.5 hover:bg-[#d6b03a] hover:shadow-md active:translate-y-0",
+      "bg-brand-accent text-white shadow-sm hover:-translate-y-0.5 hover:bg-brand-accent-strong hover:shadow-md active:translate-y-0",
+    // On dark surfaces a white fill reads stronger than maroon.
     inverse:
-      "bg-brand-accent text-brand-ink shadow-sm hover:-translate-y-0.5 hover:bg-[#d6b03a] hover:shadow-md active:translate-y-0",
+      "bg-white text-brand-ink shadow-sm hover:-translate-y-0.5 hover:bg-brand-accent hover:text-white hover:shadow-md active:translate-y-0",
   },
   secondary: {
     default:
-      "border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white",
-    inverse: "border-2 border-white/80 text-white hover:bg-white hover:text-brand-primary",
+      "border border-brand-ink/80 text-brand-ink hover:bg-brand-ink hover:text-white",
+    inverse: "border border-white/60 text-white hover:border-white hover:bg-white hover:text-brand-ink",
   },
   ghost: {
     default: "text-brand-primary hover:bg-brand-primary/5",

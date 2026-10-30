@@ -1,3 +1,4 @@
+export { default as BrandStripe } from "./BrandStripe";
 export { default as Button, buttonClasses } from "./Button";
 export { default as Card } from "./Card";
 export { default as Container } from "./Container";

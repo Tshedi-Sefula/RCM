@@ -26,6 +26,41 @@ export const site = {
     { day: "Sunday", time: "9:00 AM & 6:00 PM" },
     { day: "Wednesday", time: "7:00 PM" },
   ],
+  // The same services as start times, for the home page countdown.
+  // weekday: 0 = Sunday … 6 = Saturday, in the church's local time.
+  serviceSchedule: [
+    { weekday: 0, hour: 9, minute: 0 },
+    { weekday: 0, hour: 18, minute: 0 },
+    { weekday: 3, hour: 19, minute: 0 },
+  ],
+  // Home page "Our Fellowships" cards. Placeholders: edit the names,
+  // descriptions and photos to match the church's ministries.
+  fellowships: [
+    {
+      title: "Restoration Kids",
+      description:
+        "A safe, joyful space for children to learn about Jesus through stories, songs and play while parents join the service.",
+      image: "/images/img1.jpg",
+    },
+    {
+      title: "Women of Purpose",
+      description:
+        "Women growing together in faith and friendship through prayer, the Word and encouraging one another in every season.",
+      image: "/images/img2.jpg",
+    },
+    {
+      title: "Word & Prayer",
+      description:
+        "Our midweek gathering to go deeper in Scripture and stand together in prayer for our families and community.",
+      image: "/images/img3.jpg",
+    },
+    {
+      title: "Community Outreach",
+      description:
+        "Sharing the love of Christ in Toitskraal and beyond through children's events, care drives and practical help.",
+      image: "/images/videos-hero.jpg",
+    },
+  ],
   // Home page intro video. Placeholder: replace with the church's own
   // YouTube video ID (the part after "watch?v=" in the URL).
   introVideo: {

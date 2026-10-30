@@ -15,12 +15,12 @@ export default function Notice({ title, children, tone = "info", className }: No
     <div
       role={tone === "error" ? "alert" : undefined}
       className={cn(
-        "rounded-2xl border p-8 text-center",
+        "rounded-lg border p-8 text-center",
         tone === "error" ? "border-error/20 bg-error-soft" : "border-dashed border-brand-line bg-white",
         className,
       )}
     >
-      <p className={cn("font-display text-xl font-semibold", tone === "error" && "text-error")}>{title}</p>
+      <p className={cn("font-display text-xl font-bold", tone === "error" && "text-error")}>{title}</p>
       {children && <div className="mt-2 text-brand-muted">{children}</div>}
     </div>
   );

@@ -14,12 +14,12 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
       <body className="flex min-h-screen items-center justify-center bg-brand-surface px-4 text-center text-brand-ink">
         <title>Something went wrong</title>
         <div role="alert" className="max-w-lg">
-          <h1 className="font-serif text-3xl font-semibold text-brand-primary">Something went wrong</h1>
+          <h1 className="text-3xl font-bold text-brand-primary">Something went wrong</h1>
           <p className="mt-4 text-brand-muted">The site couldn&apos;t be loaded. Please try again in a moment.</p>
           <button
             type="button"
             onClick={() => retry()}
-            className="mt-8 rounded-full bg-brand-accent px-6 py-3 font-semibold text-brand-ink"
+            className="mt-8 rounded-md bg-brand-accent px-6 py-3 font-semibold text-white"
           >
             Try again
           </button>

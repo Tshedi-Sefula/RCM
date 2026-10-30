@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
     <main id="main" className="flex flex-1 items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center text-center">
-          <Image src="/logo.svg" alt="" width={56} height={56} priority />
+          <Image src="/rcm-logo.png" alt="" width={56} height={56} className="rounded-full" priority />
           <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-brand-accent-strong">
             {site.shortName}
           </p>

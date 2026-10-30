@@ -12,9 +12,9 @@ const tones: Record<Tone, string> = {
 };
 
 const spacing = {
-  sm: "py-12 sm:py-16",
-  md: "py-16 sm:py-24",
-  lg: "py-20 sm:py-32",
+  sm: "py-14 sm:py-20",
+  md: "py-20 sm:py-28",
+  lg: "py-24 sm:py-36",
 };
 
 type SectionProps = ComponentProps<"section"> & {

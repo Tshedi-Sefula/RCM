@@ -6,33 +6,38 @@
  * ------------------------------------------------------------------
  * Each token becomes Tailwind utilities, e.g. `bg-brand-primary`,
  * `text-brand-muted`, `border-brand-accent`, `ring-brand-accent`.
+ * Colours come from the RCM logo (maroon "R", navy stroke, black figure)
+ * laid over the reference site's near-black / stark-white structure.
  *
- * brand-primary        Deep blue. Header, footer, dark sections, headings.
- * brand-primary-soft   Lighter blue for hover states on dark surfaces.
- * brand-accent         Warm gold. CTA fills, highlights, focus rings.
- *                      Use with brand-ink text (6.3:1). Do NOT use as text
- *                      on light backgrounds (fails WCAG AA).
- * brand-accent-strong  Darker gold for text/links on light backgrounds (≥4.5:1).
- * brand-accent-soft    Pale gold tint for badges and subtle highlights.
- * brand-surface        Off-white page background.
- * brand-cream          Warmer alternate section background.
+ * brand-primary        Near-black. Header, footer, hero and dark bands.
+ * brand-primary-soft   Lifted near-black for hover states on dark surfaces.
+ * brand-accent         Logo maroon. CTA fills, eyebrows, highlights, focus
+ *                      rings. White text on it is 10:1.
+ * brand-accent-strong  Darker maroon for hover fills and small text.
+ * brand-accent-light   Rose tint for accent text on dark surfaces (7:1).
+ * brand-accent-soft    Pale maroon tint for badges and subtle highlights.
+ * brand-navy           Logo navy. Used sparingly in decorative stripes.
+ * brand-surface        White page background.
+ * brand-cream          Light grey for alternate sections.
  * brand-ink            Body text colour on light backgrounds.
- * brand-muted          Secondary text on light backgrounds (5:1 on surface).
+ * brand-muted          Secondary text on light backgrounds (6.5:1 on white).
  * brand-line           Hairline borders and dividers.
  * success / error      Form feedback (text colours pass AA on white;
  *                      *-soft are background tints).
  */
 @theme {
-  --color-brand-primary: #1a2b4c;
-  --color-brand-primary-soft: #2b4170;
-  --color-brand-accent: #c9a227;
-  --color-brand-accent-strong: #85650f;
-  --color-brand-accent-soft: #f5ecd0;
-  --color-brand-surface: #faf8f4;
-  --color-brand-cream: #f3eee4;
-  --color-brand-ink: #1c1917;
-  --color-brand-muted: #6b6b6b;
-  --color-brand-line: #e7e1d6;
+  --color-brand-primary: #0f0f11;
+  --color-brand-primary-soft: #232328;
+  --color-brand-accent: #8e1b20;
+  --color-brand-accent-strong: #6f1418;
+  --color-brand-accent-light: #f0868a;
+  --color-brand-accent-soft: #f8eaea;
+  --color-brand-navy: #1e3a6e;
+  --color-brand-surface: #ffffff;
+  --color-brand-cream: #f5f5f6;
+  --color-brand-ink: #111114;
+  --color-brand-muted: #5c5c66;
+  --color-brand-line: #e6e6ea;
 
   --color-success: #15803d;
   --color-success-soft: #dcfce7;
@@ -47,14 +52,14 @@
   --color-calendar-holiday: #15803d;
   --color-calendar-other: #64748b;
 
-  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 4px 16px rgb(28 25 23 / 0.06);
-  --shadow-card-hover: 0 2px 4px rgb(28 25 23 / 0.05), 0 12px 32px rgb(28 25 23 / 0.1);
+  --shadow-card: 0 1px 2px rgb(15 15 17 / 0.04), 0 4px 16px rgb(15 15 17 / 0.06);
+  --shadow-card-hover: 0 2px 4px rgb(15 15 17 / 0.06), 0 16px 40px rgb(15 15 17 / 0.12);
 }
 
 /* Fonts are loaded with next/font in app/layout.tsx. */
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -71,7 +76,7 @@
   }
 
   ::selection {
-    @apply bg-brand-accent-soft text-brand-ink;
+    @apply bg-brand-accent text-white;
   }
 }
 
@@ -101,6 +106,23 @@
   }
 }
 
+/* Scrolling ministry-values strip under the service bar. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+}
+
 /* FullCalendar: match brand colours */
 .fc {
   --fc-button-bg-color: var(--color-brand-primary);
@@ -111,7 +133,7 @@
   --fc-button-active-border-color: var(--color-brand-primary-soft);
   --fc-event-bg-color: var(--color-brand-accent);
   --fc-event-border-color: var(--color-brand-accent);
-  --fc-event-text-color: var(--color-brand-ink);
+  --fc-event-text-color: #fff;
   --fc-today-bg-color: var(--color-brand-accent-soft);
   --fc-border-color: var(--color-brand-line);
 }
@@ -119,6 +141,7 @@
 .fc .fc-toolbar-title {
   font-family: var(--font-display);
   font-size: 1.5rem;
+  font-weight: 700;
 }
 
 /* View-only: events aren't links, so don't suggest they're clickable. */

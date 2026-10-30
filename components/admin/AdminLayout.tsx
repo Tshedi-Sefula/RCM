@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <aside className="bg-brand-primary text-white md:sticky md:top-0 md:flex md:h-dvh md:w-64 md:shrink-0 md:flex-col">
         <div className="px-4 pt-4 md:px-5 md:pt-6">
           <Link href="/admin" className="flex items-center gap-3">
-            <Image src="/logo.svg" alt="" width={36} height={36} />
+            <Image src="/rcm-logo.png" alt="" width={36} height={36} className="rounded-full" />
             <span className="font-display text-base font-semibold leading-tight">
               {site.shortName}
               <span className="block font-sans text-xs font-medium uppercase tracking-[0.18em] text-white/70">
@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <AdminNav />
         </div>
         <div className="hidden border-t border-white/10 px-5 py-4 md:block">
-          <Link href="/" className="text-sm text-white/80 hover:text-brand-accent">
+          <Link href="/" className="text-sm text-white/80 hover:text-brand-accent-light">
             ← View website
           </Link>
         </div>

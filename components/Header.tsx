@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import SpotifyLink from "@/components/SpotifyLink";
+import BrandStripe from "@/components/ui/BrandStripe";
 import Container from "@/components/ui/Container";
 import { cn } from "@/lib/cn";
 import { navLinks, site } from "@/lib/site";
@@ -39,19 +40,27 @@ export default function Header() {
       className={cn(
         "sticky top-0 z-50 text-white transition-[background-color,box-shadow] duration-300",
         open
-          ? "bg-brand-primary shadow-lg shadow-black/10"
+          ? "bg-brand-primary shadow-lg shadow-black/20"
           : scrolled
-            ? "bg-brand-primary/85 shadow-lg shadow-black/10 backdrop-blur-md"
+            ? "bg-brand-primary/85 shadow-lg shadow-black/20 backdrop-blur-md"
             : "bg-brand-primary",
       )}
     >
-      <Container className="flex h-16 items-center justify-between gap-6 sm:h-18">
-        <Link href="/" className="flex shrink-0 items-center gap-3" onClick={() => setOpen(false)}>
-          <Image src="/logo.svg" alt="" width={40} height={40} priority />
-          <span className="font-display text-base font-semibold leading-tight sm:text-lg">
-            <span className="hidden xl:inline">{site.name}</span>
-            <span className="xl:hidden">{site.shortName}</span>
-          </span>
+      <Container className="flex h-16 items-center justify-between gap-6 sm:h-20">
+        <Link
+          href="/"
+          aria-label={`${site.name}, home`}
+          className="flex shrink-0 items-center rounded-full"
+          onClick={() => setOpen(false)}
+        >
+          <Image
+            src="/rcm-logo.png"
+            alt=""
+            width={56}
+            height={56}
+            priority
+            className="size-11 rounded-full ring-2 ring-white/10 transition-transform hover:scale-105 sm:size-14"
+          />
         </Link>
 
         <nav className="hidden md:block" aria-label="Main">
@@ -62,8 +71,10 @@ export default function Header() {
                   href={link.href}
                   aria-current={isActive(link.href) ? "page" : undefined}
                   className={cn(
-                    "relative rounded-full px-3 py-2 text-sm font-medium transition-colors hover:text-brand-accent lg:text-[0.95rem]",
-                    isActive(link.href) ? "text-brand-accent" : "text-white/90",
+                    "relative block px-3 py-2 text-sm font-semibold transition-colors hover:text-white lg:px-4 lg:text-[0.95rem]",
+                    // Maroon underline marks the current page.
+                    "after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:origin-left after:bg-brand-accent after:transition-transform lg:after:inset-x-4",
+                    isActive(link.href) ? "text-white after:scale-x-100" : "text-white/70 after:scale-x-0 hover:after:scale-x-100",
                   )}
                 >
                   {link.label}
@@ -73,7 +84,7 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 md:border-l md:border-white/15 md:pl-3">
           <SpotifyLink />
           <button
             type="button"
@@ -108,8 +119,8 @@ export default function Header() {
                   onClick={() => setOpen(false)}
                   aria-current={isActive(link.href) ? "page" : undefined}
                   className={cn(
-                    "block rounded-lg px-3 py-3 text-lg font-medium hover:bg-white/5 hover:text-brand-accent",
-                    isActive(link.href) && "text-brand-accent",
+                    "block rounded-md border-l-2 px-3 py-3 text-lg font-semibold hover:bg-white/5",
+                    isActive(link.href) ? "border-brand-accent text-white" : "border-transparent text-white/75",
                   )}
                 >
                   {link.label}
@@ -123,6 +134,8 @@ export default function Header() {
           </ul>
         </nav>
       </div>
+
+      <BrandStripe />
     </header>
   );
 }

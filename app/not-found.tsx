@@ -9,11 +9,11 @@ export default function NotFound() {
   return (
     <main id="main" className="flex flex-1 items-center justify-center px-4 py-24 text-center">
       <div className="max-w-lg">
-        <Image src="/logo.svg" alt="" width={56} height={56} className="mx-auto" />
+        <Image src="/rcm-logo.png" alt="" width={56} height={56} className="mx-auto rounded-full" />
         <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-brand-accent-strong">
           {site.shortName}
         </p>
-        <h1 className="mt-2 font-display text-4xl font-semibold text-brand-primary">Page not found</h1>
+        <h1 className="mt-2 font-display text-4xl font-bold text-brand-primary">Page not found</h1>
         <p className="mt-4 text-brand-muted">
           The page you&apos;re looking for doesn&apos;t exist or has moved.
         </p>

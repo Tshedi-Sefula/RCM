@@ -12,7 +12,7 @@ export default function Card({ interactive = false, padded = true, className, ..
     <div
       {...rest}
       className={cn(
-        "overflow-hidden rounded-2xl border border-brand-line bg-white shadow-card",
+        "overflow-hidden rounded-lg border border-brand-line bg-white shadow-card",
         padded && "p-6 sm:p-8",
         interactive &&
           "transition duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0",

@@ -3,12 +3,13 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import Container from "./Container";
 import Heading, { Eyebrow } from "./Heading";
+import BrandStripe from "./BrandStripe";
 
 type HeroProps = {
   title: string;
   subtitle?: string;
   eyebrow?: string;
-  // Background photo; without one a deep blue gradient is used.
+  // Background photo; without one a near-black gradient is used.
   image?: string;
   // CTAs, e.g. one or two <Button>s with tone="inverse".
   actions?: ReactNode;
@@ -30,26 +31,26 @@ export default function Hero({
     <section
       className={cn(
         "relative isolate flex items-center overflow-hidden bg-brand-primary text-white",
-        size === "lg" ? "min-h-[78vh] py-28" : "min-h-[44vh] py-20 sm:py-24",
+        size === "lg" ? "min-h-[86vh] py-32" : "min-h-[42vh] py-20 sm:py-28",
       )}
     >
       {image && (
         <Image src={image} alt="" fill priority sizes="100vw" className="-z-20 object-cover" />
       )}
-      {/* Warm overlay keeps text readable over any photo. */}
+      {/* Dark overlay keeps text readable over any photo. */}
       <div
         aria-hidden
         className={cn(
           "absolute inset-0 -z-10",
           image
-            ? "bg-gradient-to-b from-brand-primary/80 via-brand-primary/65 to-brand-primary/90"
-            : "bg-[radial-gradient(ellipse_at_top_right,rgb(201_162_39/0.28),transparent_55%),linear-gradient(160deg,#1a2b4c,#0e1a33)]",
+            ? "bg-gradient-to-b from-brand-primary/85 via-brand-primary/60 to-brand-primary/95"
+            : "bg-[radial-gradient(ellipse_at_top_right,rgb(142_27_32/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgb(30_58_110/0.3),transparent_50%),linear-gradient(160deg,#18181c,#0f0f11)]",
         )}
       />
 
       <Container className={cn(align === "center" && "text-center")}>
         <div className={cn("max-w-3xl", align === "center" && "mx-auto")}>
-          {eyebrow && <Eyebrow className="text-brand-accent">{eyebrow}</Eyebrow>}
+          {eyebrow && <Eyebrow className="text-brand-accent-light">{eyebrow}</Eyebrow>}
           <Heading level={1} className="text-white">
             {title}
           </Heading>
@@ -68,6 +69,8 @@ export default function Hero({
           )}
         </div>
       </Container>
+
+      <BrandStripe className="absolute inset-x-0 bottom-0" />
     </section>
   );
 }

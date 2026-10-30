@@ -16,7 +16,7 @@ export default function StreamEmbed({ platform, source, title, className }: Stre
   const src = streamEmbedUrl(platform, source);
 
   return (
-    <div className={cn("relative aspect-video overflow-hidden rounded-2xl bg-brand-primary shadow-card", className)}>
+    <div className={cn("relative aspect-video overflow-hidden rounded-lg bg-brand-primary shadow-card", className)}>
       {src ? (
         <iframe
           src={src}
