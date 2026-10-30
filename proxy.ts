@@ -1,13 +1,13 @@
 import type { NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy";
 
+// Next.js 16 renamed middleware.ts to proxy.ts; this is the app's middleware.
 export async function proxy(request: NextRequest) {
   return updateSession(request);
 }
 
 export const config = {
-  matcher: [
-    // Skip static files and images.
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  // Only admin routes. Public pages read content with a cookie-less client,
+  // so they never need the session and the proxy never touches them.
+  matcher: ["/admin", "/admin/:path*"],
 };

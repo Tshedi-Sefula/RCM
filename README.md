@@ -88,4 +88,6 @@ Recommended: turn off public sign-ups (**Authentication → Sign In / Providers 
 - `lib/supabase/client.ts` — browser client (Client Components).
 - `lib/supabase/server.ts` — cookie-based server client (Server Components, Server Actions, Route Handlers).
 - `lib/supabase/admin.ts` — service-role client (server only).
+- `lib/auth.ts` — admin Data Access Layer: `requireAdmin()` verifies the session and `profiles.is_admin`. Call it in every admin page and Server Action.
+- `proxy.ts` (Next.js 16's name for `middleware.ts`) — runs on `/admin/*` only; refreshes the session and redirects signed-out visitors to `/admin/login`.
 - `lib/types/database.ts` — row types (`ChurchEvent`, `CalendarEntry`, `GalleryImage`, `StreamVideo`, `Profile`) and the `Database` type all clients are typed with.

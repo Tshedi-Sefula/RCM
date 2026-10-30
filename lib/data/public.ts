@@ -32,7 +32,7 @@ const notConfigured = "Supabase is not configured. Add the keys from .env.local.
 
 // Midnight today in the church's time zone, so events on today's date
 // still count as upcoming. South Africa is UTC+2 with no daylight saving.
-function startOfToday() {
+export function startOfToday() {
   const today = new Date().toLocaleDateString("en-CA", { timeZone: site.timeZone });
   return `${today}T00:00:00+02:00`;
 }
