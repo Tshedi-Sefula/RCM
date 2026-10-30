@@ -1,32 +1,58 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Hero from "@/components/ui/Hero";
+import { Suspense } from "react";
+import GalleryGrid from "@/components/GalleryGrid";
+import { Container, Hero, Notice } from "@/components/ui";
+import { getGalleryImages } from "@/lib/data/public";
 
 export const metadata: Metadata = { title: "Gallery" };
-
-const photos = [
-  { src: "/images/img1.jpg", alt: "Church event 1" },
-  { src: "/images/img2.jpg", alt: "Church event 2" },
-  { src: "/images/img3.jpg", alt: "Church event 3" },
-];
 
 export default function GalleryPage() {
   return (
     <>
       <Hero title="Our Moments" />
-      <section className="mx-auto grid max-w-6xl gap-4 px-4 py-16 sm:grid-cols-2 lg:grid-cols-3">
-        {photos.map((photo) => (
-          <div key={photo.src} className="relative aspect-[4/3] overflow-hidden rounded-lg bg-brand-cream">
-            <Image
-              src={photo.src}
-              alt={photo.alt}
-              fill
-              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover transition duration-300 hover:scale-105"
-            />
-          </div>
-        ))}
-      </section>
+      <Container className="py-16">
+        <Suspense fallback={<GallerySkeleton />}>
+          <Gallery />
+        </Suspense>
+      </Container>
     </>
+  );
+}
+
+async function Gallery() {
+  const { data: images, error } = await getGalleryImages();
+
+  if (error !== null) {
+    return (
+      <Notice tone="error" title="We couldn't load the gallery">
+        Please try again in a little while.
+      </Notice>
+    );
+  }
+  if (images.length === 0) {
+    return (
+      <Notice title="No photos yet">Photos from our services and events will appear here soon.</Notice>
+    );
+  }
+
+  return (
+    <GalleryGrid
+      images={images.map((img) => ({
+        id: img.id,
+        src: img.image_url,
+        alt: img.caption ?? "Photo from a church gathering",
+        caption: img.caption,
+      }))}
+    />
+  );
+}
+
+function GallerySkeleton() {
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3" aria-hidden>
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="aspect-[4/3] animate-pulse rounded-lg bg-brand-cream" />
+      ))}
+    </div>
   );
 }

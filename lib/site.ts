@@ -14,6 +14,14 @@ export const site = {
     { day: "Sunday", time: "9:00 AM & 6:00 PM" },
     { day: "Wednesday", time: "7:00 PM" },
   ],
+  // Home page intro video. Placeholder: replace with the church's own
+  // YouTube video ID (the part after "watch?v=" in the URL).
+  introVideo: {
+    youtubeId: "aqz-KE-bpKQ",
+    title: "Welcome to RCM Toitskraal",
+  },
+  // Dates and times are shown in the church's local time zone.
+  timeZone: "Africa/Johannesburg",
 };
 
 export const navLinks = [

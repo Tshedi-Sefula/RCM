@@ -1,6 +1,16 @@
 import Link from "next/link";
-import { Button, Card, Eyebrow, Heading, Hero, Reveal, Section } from "@/components/ui";
+import { Suspense } from "react";
+import StreamEmbed from "@/components/StreamEmbed";
+import { Button, Card, Eyebrow, Heading, Hero, Notice, Reveal, Section } from "@/components/ui";
+import { getLatestStream } from "@/lib/data/public";
 import { site } from "@/lib/site";
+
+const streamDateFormat = new Intl.DateTimeFormat("en-ZA", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: site.timeZone,
+});
 
 export default function Home() {
   return (
@@ -33,6 +43,19 @@ export default function Home() {
         </Reveal>
       </Section>
 
+      <Section tone="white" containerWidth="narrow">
+        <Reveal className="text-center">
+          <Eyebrow>Get to know us</Eyebrow>
+          <Heading level={2}>{site.introVideo.title}</Heading>
+        </Reveal>
+        <StreamEmbed
+          platform="youtube"
+          source={site.introVideo.youtubeId}
+          title={site.introVideo.title}
+          className="mt-10"
+        />
+      </Section>
+
       <Section tone="cream">
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
@@ -59,6 +82,53 @@ export default function Home() {
           </Link>
         </div>
       </Section>
+
+      <Section tone="surface" containerWidth="narrow">
+        <div className="text-center">
+          <Eyebrow>Watch</Eyebrow>
+          <Heading level={2}>Latest Stream</Heading>
+        </div>
+        <Suspense fallback={<div className="mt-10 aspect-video animate-pulse rounded-2xl bg-brand-cream" aria-hidden />}>
+          <LatestStream />
+        </Suspense>
+      </Section>
     </>
+  );
+}
+
+async function LatestStream() {
+  const { data: stream, error } = await getLatestStream();
+
+  if (error !== null) {
+    return (
+      <Notice tone="error" title="We couldn't load the latest stream" className="mt-10">
+        Please try again in a little while.
+      </Notice>
+    );
+  }
+  if (!stream) {
+    return (
+      <Notice title="No streams yet" className="mt-10">
+        Recordings of our services will appear here.
+      </Notice>
+    );
+  }
+
+  return (
+    <div className="mt-10">
+      <StreamEmbed platform={stream.platform} source={stream.video_id_or_url} title={stream.title} />
+      <p className="mt-4 text-center">
+        <span className="font-semibold">{stream.title}</span>
+        {stream.stream_date && (
+          <span className="text-brand-muted">
+            {" · "}
+            {/* `date` columns have no time; read at UTC midnight so the day doesn't shift. */}
+            <time dateTime={stream.stream_date}>
+              {streamDateFormat.format(new Date(`${stream.stream_date}T00:00:00Z`))}
+            </time>
+          </span>
+        )}
+      </p>
+    </div>
   );
 }

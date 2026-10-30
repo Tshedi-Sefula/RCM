@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /*
  * Brand tokens
@@ -39,6 +40,12 @@
   --color-error-soft: #fee2e2;
 
   --color-spotify: #1db954;
+
+  /* Calendar categories. Text colours are set in lib/calendar.ts. */
+  --color-calendar-service: #1d4ed8;
+  --color-calendar-special: #c9a227;
+  --color-calendar-holiday: #15803d;
+  --color-calendar-other: #64748b;
 
   --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 4px 16px rgb(28 25 23 / 0.06);
   --shadow-card-hover: 0 2px 4px rgb(28 25 23 / 0.05), 0 12px 32px rgb(28 25 23 / 0.1);
@@ -112,4 +119,21 @@
 .fc .fc-toolbar-title {
   font-family: var(--font-display);
   font-size: 1.5rem;
+}
+
+/* View-only: events aren't links, so don't suggest they're clickable. */
+.fc .fc-event,
+.fc .fc-list-event:hover td {
+  cursor: default;
+}
+
+/* Phones: stack the toolbar so the title and buttons don't collide. */
+@media (max-width: 767px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .fc .fc-toolbar-title {
+    font-size: 1.25rem;
+  }
 }
