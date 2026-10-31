@@ -6,6 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import type { EventContentArg, EventMountArg } from "@fullcalendar/core";
 import { recurringServiceEvents, toCalendarEvent } from "@/lib/calendar";
+import { holidayEventSource } from "@/lib/holidays";
 import type { CalendarEntry } from "@/lib/types/database";
 
 type ChurchCalendarProps = {
@@ -62,6 +63,16 @@ function renderEventContent({ event, view }: EventContentArg) {
 // month at a time so the weekly services don't crowd out everything else.
 export default function ChurchCalendar({ entries }: ChurchCalendarProps) {
   const events = useMemo(() => [...recurringServiceEvents(), ...entries.map(toCalendarEvent)], [entries]);
+  // SA public holidays for whichever range is on screen, minus days the admin
+  // has already marked with their own holiday entry.
+  const holidays = useMemo(
+    () =>
+      holidayEventSource(
+        new Set(entries.filter((entry) => entry.category === "holiday").map((entry) => entry.start_date)),
+      ),
+    [entries],
+  );
+  const eventSources = useMemo(() => [{ events }, { events: holidays }], [events, holidays]);
   const isMobile = useIsMobile();
 
   if (isMobile === null) return <CalendarSkeleton />;
@@ -76,7 +87,7 @@ export default function ChurchCalendar({ entries }: ChurchCalendarProps) {
         right: "dayGridMonth,listMonth",
       }}
       buttonText={{ today: "Today", month: "Month", list: "List" }}
-      events={events}
+      eventSources={eventSources}
       editable={false}
       selectable={false}
       eventStartEditable={false}

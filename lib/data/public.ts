@@ -1,6 +1,7 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
+import { mergeWithDefaultGalleryImages } from "@/lib/default-gallery";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { site } from "@/lib/site";
 import type { CalendarEntry, ChurchEvent, Database, GalleryImage, StreamVideo } from "@/lib/types/database";
@@ -101,7 +102,10 @@ export async function getGalleryImages(): Promise<QueryResult<GalleryImage[]>> {
     return { data: null, error: error.message };
   }
   cacheLife("hours");
-  return { data, error: null };
+  // Temporary sync: combine Supabase gallery_images rows with the local
+  // defaultGalleryImages array (deduplicated) until the admin manually
+  // uploads or replaces them via the dashboard.
+  return { data: mergeWithDefaultGalleryImages(data), error: null };
 }
 
 // The newest memorable stream, or the newest stream if none are marked
