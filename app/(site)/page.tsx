@@ -7,6 +7,7 @@ import StreamEmbed from "@/components/StreamEmbed";
 import { BrandStripe, Button, Card, Container, Eyebrow, Heading, Notice, Reveal, Section } from "@/components/ui";
 import { getGalleryImages, getLatestStream } from "@/lib/data/public";
 import { isOptimizableImage } from "@/lib/media";
+import { ministries } from "@/lib/ministries";
 import { site } from "@/lib/site";
 
 const streamDateFormat = new Intl.DateTimeFormat("en-ZA", {
@@ -86,39 +87,42 @@ export default function Home() {
         </SectionHeader>
         {/* Flex rather than grid so a short last row stays centred. */}
         <ul className="mt-14 flex flex-wrap justify-center gap-6">
-          {site.fellowships.map((f, i) => (
-            <li key={f.title} className="w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]">
+          {ministries.map((m, i) => (
+            <li key={m.slug} className="w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]">
               <Reveal delay={i * 80} className="h-full">
-                <Card interactive padded={false} className="group flex h-full flex-col">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-brand-cream">
-                    {f.image ? (
-                      <Image
-                        src={f.image}
-                        alt=""
-                        fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="object-cover transition duration-500 group-hover:scale-105 motion-reduce:transition-none"
-                      />
-                    ) : (
-                      <FellowshipPlaceholder title={f.title} />
-                    )}
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <Heading level={3} size={4} className="text-xl">
-                      {f.title}
-                    </Heading>
-                    <p className="mt-3 text-[0.95rem] text-brand-muted">{f.description}</p>
-                    <Link
-                      href="/contact"
-                      className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-bold uppercase tracking-wider text-brand-accent transition-colors hover:text-brand-accent-strong"
-                    >
-                      Learn more<span className="sr-only"> about {f.title}</span>
-                      <span aria-hidden className="transition-transform group-hover:translate-x-1">
-                        →
+                {/* The whole card is the link, so "Learn more" below is a styled span, not a nested link. */}
+                <Link
+                  href={`/ministries/${m.slug}`}
+                  className="group block h-full rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-accent"
+                >
+                  <Card interactive padded={false} className="flex h-full flex-col">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-brand-cream">
+                      {m.coverImage ? (
+                        <Image
+                          src={m.coverImage}
+                          alt=""
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="h-full w-full object-cover transition duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                        />
+                      ) : (
+                        <FellowshipPlaceholder title={m.title} />
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col p-6">
+                      <Heading level={3} size={4} className="text-xl">
+                        {m.title}
+                      </Heading>
+                      <p className="mt-3 text-[0.95rem] text-brand-muted">{m.description}</p>
+                      <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-bold uppercase tracking-wider text-brand-accent transition-colors group-hover:text-brand-accent-strong">
+                        Learn more
+                        <span aria-hidden className="transition-transform group-hover:translate-x-1">
+                          →
+                        </span>
                       </span>
-                    </Link>
-                  </div>
-                </Card>
+                    </div>
+                  </Card>
+                </Link>
               </Reveal>
             </li>
           ))}

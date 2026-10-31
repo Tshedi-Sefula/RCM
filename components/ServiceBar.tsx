@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
+import OnlineServiceNote from "@/components/OnlineServiceNote";
 import Container from "@/components/ui/Container";
 import { site } from "@/lib/site";
 
@@ -91,11 +92,15 @@ export default function ServiceBar() {
         </div>
 
         <div className="flex flex-col gap-3 border-t border-white/20 pt-5 sm:flex-row sm:items-center sm:gap-8 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0">
-          <ul className="flex flex-wrap gap-x-8 gap-y-2">
+          <ul className="flex flex-wrap gap-x-8 gap-y-3 xl:flex-nowrap">
             {site.serviceTimes.map((s) => (
-              <li key={s.day}>
-                <span className="block text-xs font-bold uppercase tracking-[0.18em] text-white/70">{s.day}</span>
-                <span className="font-semibold">{s.time}</span>
+              <li key={s.day} className="xl:whitespace-nowrap">
+                <span className="block text-xs font-bold uppercase tracking-[0.18em] text-white/70">
+                  {s.day}
+                  {s.group && ` · ${s.group}`}
+                </span>
+                <span className="block font-semibold">{s.time}</span>
+                <OnlineServiceNote service={s} className="text-white/80" />
               </li>
             ))}
           </ul>

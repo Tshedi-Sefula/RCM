@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import FacebookLink from "@/components/FacebookLink";
+import OnlineServiceNote from "@/components/OnlineServiceNote";
 import SpotifyLink from "@/components/SpotifyLink";
 import YouTubeLink from "@/components/YouTubeLink";
 import BrandStripe from "@/components/ui/BrandStripe";
@@ -58,8 +59,12 @@ export default function Footer() {
           <ul className="mt-5 space-y-3 text-sm">
             {site.serviceTimes.map((s) => (
               <li key={s.day}>
-                <span className="block font-semibold text-white">{s.day}</span>
-                {s.time}
+                <span className="block font-semibold text-white">
+                  {s.day}
+                  {s.group && ` (${s.group})`}
+                </span>
+                <span className="block">{s.time}</span>
+                <OnlineServiceNote service={s} className="text-white/55" />
               </li>
             ))}
           </ul>

@@ -82,7 +82,7 @@ export function toCalendarEvent(entry: CalendarEntry): EventInput {
 }
 
 // site.recurringServices as FullCalendar recurring events, repeating every week
-// at the church's address.
+// at the church's address, or online for the WhatsApp-group services.
 export function recurringServiceEvents(): EventInput[] {
   const { color, textColor } = calendarCategories.service;
   return site.recurringServices.map((service) => ({
@@ -93,6 +93,9 @@ export function recurringServiceEvents(): EventInput[] {
     endTime: service.endTime,
     color,
     textColor,
-    extendedProps: { description: "Every week. All are welcome.", location: site.contact.address },
+    extendedProps: {
+      description: [service.about, "Every week. All are welcome."].filter(Boolean).join(" "),
+      location: service.online ? "Online via WhatsApp group" : site.contact.address,
+    },
   }));
 }

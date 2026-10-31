@@ -7,12 +7,21 @@ function siteUrl() {
   return "http://localhost:3000";
 }
 
+export type ServiceTime = {
+  day: string;
+  // Who the service is for, e.g. "RCM Youth"; null for the whole church.
+  group: string | null;
+  time: string;
+  online: boolean;
+  whatsappUrl: string | null;
+};
+
 export const site = {
   name: "Restoration Center Ministries Toitskraal",
   shortName: "RCM Toitskraal",
   url: siteUrl(),
   description:
-    "Restoration Center Ministries Toitskraal is a community of believers passionate about Jesus and people. Join us for Sunday and midweek services in Toitskraal, Marble Hall.",
+    "Restoration Center Ministries Toitskraal is a community of believers passionate about Jesus and people. Join us on Sundays in Toitskraal, Marble Hall, and online midweek.",
   copyright: "© 2026 Restoration Center Ministries Toitskraal",
   spotifyUrl:
     "https://open.spotify.com/artist/2n5wafdQFWEOKTK3vc9Cwf?si=z3knZ89NTbO0VHz2pDB6dg",
@@ -24,56 +33,31 @@ export const site = {
     phone: "[Phone number]",
     email: "[Email address]",
   },
+  // Shown on the home page service bar, the footer and the contact page.
+  // Online services are held in WhatsApp groups; set whatsappUrl to a group's
+  // invite link to turn its "Online via WhatsApp" note into a join link.
   serviceTimes: [
-    { day: "Sunday", time: "9:00 AM – 12:00 PM" },
-    { day: "Wednesday", time: "7:00 PM" },
-  ],
+    { day: "Sunday", group: null, time: "9:00 AM – 12:00 PM", online: false, whatsappUrl: null },
+    { day: "Wednesday", group: null, time: "7:00 PM", online: true, whatsappUrl: null },
+    { day: "Thursday", group: "RCM Youth", time: "7:00 PM", online: true, whatsappUrl: null },
+  ] as ServiceTime[],
   // The same services as start times, for the home page countdown.
   // weekday: 0 = Sunday … 6 = Saturday, in the church's local time.
   serviceSchedule: [
     { weekday: 0, hour: 9, minute: 0 },
     { weekday: 3, hour: 19, minute: 0 },
+    { weekday: 4, hour: 19, minute: 0 },
   ],
   // Weekly services shown on every matching day of the /calendar page.
   // They're a given, so they live here rather than as calendar entries.
-  // Times are "HH:MM" in the church's local time.
+  // Times are "HH:MM" in the church's local time. Online services show
+  // "Online via WhatsApp group" instead of the church's address.
+  // The midweek end times assume an hour; adjust if they run longer.
   recurringServices: [
-    { title: "Sunday Service", weekday: 0, startTime: "09:00", endTime: "12:00" },
-  ],
-  // Home page "Our Fellowships" cards. Placeholders: edit the names,
-  // descriptions and photos to match the church's ministries. A card
-  // without an image shows a branded placeholder panel instead.
-  fellowships: [
-    {
-      title: "Restoration Kids",
-      description:
-        "A safe, joyful space for children to learn about Jesus through stories, songs and play while parents join the service.",
-      image: "/images/img1.jpg",
-    },
-    {
-      title: "RCM Youth",
-      description:
-        "Empowering the next generation to grow in faith, build meaningful friendships and discover their purpose in Christ.",
-      image: null,
-    },
-    {
-      title: "Women of Purpose",
-      description:
-        "Women growing together in faith and friendship through prayer, the Word and encouraging one another in every season.",
-      image: "/images/img2.jpg",
-    },
-    {
-      title: "Word & Prayer",
-      description:
-        "Our midweek gathering to go deeper in Scripture and stand together in prayer for our families and community.",
-      image: "/images/img3.jpg",
-    },
-    {
-      title: "Community Outreach",
-      description:
-        "Sharing the love of Christ in Toitskraal and beyond through children's events, care drives and practical help.",
-      image: "/images/videos-hero.jpg",
-    },
+    { title: "Sunday Service", weekday: 0, startTime: "09:00", endTime: "12:00", online: false, about: null },
+    { title: "Midweek Service", weekday: 3, startTime: "19:00", endTime: "20:00", online: true, about: null },
+    // Short title so it fits a month-view cell; `about` leads the description.
+    { title: "RCM Youth", weekday: 4, startTime: "19:00", endTime: "20:00", online: true, about: "Youth Bible Study." },
   ],
   // Home page intro video. Placeholder: replace with the church's own
   // YouTube video ID (the part after "watch?v=" in the URL).

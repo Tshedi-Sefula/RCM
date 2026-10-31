@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import ContactForm, { ContactFormWithTopic } from "@/components/ContactForm";
+import OnlineServiceNote from "@/components/OnlineServiceNote";
 import { Eyebrow, Heading, Hero, Section } from "@/components/ui";
 import { site } from "@/lib/site";
 
@@ -35,7 +36,12 @@ export default function ContactPage() {
                 <dt className="text-xs font-bold uppercase tracking-[0.18em] text-brand-accent">Service times</dt>
                 {site.serviceTimes.map((s) => (
                   <dd key={s.day} className="mt-1.5">
-                    <span className="font-semibold">{s.day}:</span> {s.time}
+                    <span className="font-semibold">
+                      {s.day}
+                      {s.group && ` (${s.group})`}:
+                    </span>{" "}
+                    {s.time}
+                    <OnlineServiceNote service={s} className="ml-2 align-middle text-brand-muted" />
                   </dd>
                 ))}
               </div>
