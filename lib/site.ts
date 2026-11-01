@@ -26,11 +26,10 @@ export const site = {
   spotifyUrl: "https://open.spotify.com/artist/2n5wafdQFWEOKTK3vc9Cwf",
   youtubeUrl: "https://youtube.com/@rcm_toitskraal?si=saY10tOEmNm0Hqi4",
   facebookUrl: "https://www.facebook.com/share/1JbSbE3SxM/",
-  // Phone and email are placeholders: replace with the church's real details.
   contact: {
     address: "RCM Toitskraal, D5 Toitskraal Woongebied, Marble Hall",
-    phone: "[Phone number]",
-    email: "[Email address]",
+    phone: "0605515654",
+    email: "rcm.toitskraal@gmail.com",
   },
   // Shown on the home page service bar, the footer and the contact page.
   // Online services are held in WhatsApp groups; set whatsappUrl to a group's
@@ -70,6 +69,7 @@ export const site = {
 
 export const navLinks = [
   { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
   { href: "/beliefs", label: "Beliefs" },
   { href: "/events", label: "Events" },
   { href: "/calendar", label: "Calendar" },

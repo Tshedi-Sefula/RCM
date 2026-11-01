@@ -47,8 +47,16 @@ export default function ContactPage() {
               </div>
               <div>
                 <dt className="text-xs font-bold uppercase tracking-[0.18em] text-brand-accent">Call or email</dt>
-                <dd className="mt-1.5">{site.contact.phone}</dd>
-                <dd>{site.contact.email}</dd>
+                <dd className="mt-1.5">
+                  <a href={`tel:${site.contact.phone}`} className="transition-colors hover:text-brand-accent">
+                    {site.contact.phone}
+                  </a>
+                </dd>
+                <dd>
+                  <a href={`mailto:${site.contact.email}`} className="transition-colors hover:text-brand-accent">
+                    {site.contact.email}
+                  </a>
+                </dd>
               </div>
             </dl>
           </div>

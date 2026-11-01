@@ -63,15 +63,24 @@ export default function Home() {
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <Eyebrow>Who we are</Eyebrow>
-            <Heading level={2}>A Christ-centred community for everyone</Heading>
-            <p className="mt-6 text-lg text-brand-muted">
-              To build a Christ-centred community where everyone feels welcome and empowered to grow in faith. Wherever
-              you are on your journey, there is a place for you at {site.shortName}.
-            </p>
+            <Heading level={2}>Restoring lives, Broken marriages, Families and Futures.</Heading>
+            <div className="mt-6 space-y-4 text-lg text-brand-muted">
+              <p>
+                <strong className="font-semibold text-brand-ink">Vision:</strong> Restoring lives, Broken marriages,
+                Families and Futures.
+              </p>
+              <p>
+                <strong className="font-semibold text-brand-ink">Mission:</strong> Heal the PAST ~ Live the PRESENT ~
+                Dream the FUTURE.
+              </p>
+              <blockquote className="rounded-lg border-l-4 border-brand-accent bg-brand-cream px-4 py-3 text-base italic text-brand-ink">
+                Expecting the Unexpected because of Luke 1:37, &lsquo;For with God, nothing will be impossible.&rsquo;
+              </blockquote>
+            </div>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button href="/beliefs">What we believe</Button>
-              <Button href="/events" variant="secondary">
-                Upcoming events
+              <Button href="/about">About Us</Button>
+              <Button href="/beliefs" variant="secondary">
+                What we believe
               </Button>
             </div>
           </Reveal>

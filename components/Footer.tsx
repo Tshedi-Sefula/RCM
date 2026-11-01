@@ -74,8 +74,16 @@ export default function Footer() {
           <h2 className={headingClass}>Contact</h2>
           <address className="mt-5 space-y-3 text-sm not-italic">
             <p>{site.contact.address}</p>
-            <p>{site.contact.phone}</p>
-            <p>{site.contact.email}</p>
+            <p>
+              <a href={`tel:${site.contact.phone}`} className="transition-colors hover:text-white">
+                {site.contact.phone}
+              </a>
+            </p>
+            <p>
+              <a href={`mailto:${site.contact.email}`} className="transition-colors hover:text-white">
+                {site.contact.email}
+              </a>
+            </p>
           </address>
           <Link
             href="/contact"
