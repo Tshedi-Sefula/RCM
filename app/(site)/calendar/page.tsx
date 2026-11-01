@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import ChurchCalendar, { CalendarSkeleton } from "@/components/ChurchCalendar";
 import { Container, Hero, Notice } from "@/components/ui";
 import { calendarCategories } from "@/lib/calendar";
-import { getCalendarEntries } from "@/lib/data/public";
+import { getCalendarChurchEvents, getCalendarEntries } from "@/lib/data/public";
 import { placeholderCalendarEntries } from "@/lib/placeholder-events";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
@@ -28,7 +28,10 @@ export default function CalendarPage() {
 }
 
 async function Calendar() {
-  const { data: entries, error } = await getCalendarEntries();
+  const [{ data: entries, error }, { data: churchEvents }] = await Promise.all([
+    getCalendarEntries(),
+    getCalendarChurchEvents(),
+  ]);
 
   if (error !== null) {
     // Local development without Supabase: preview with sample dates.
@@ -49,22 +52,37 @@ async function Calendar() {
     );
   }
 
-  return <ChurchCalendar entries={entries} />;
+  return <ChurchCalendar entries={entries} churchEvents={churchEvents ?? []} />;
 }
 
 function CalendarLegend() {
+  const legendItems = [
+    ...Object.entries(calendarCategories).map(([key, category]) => ({
+      key,
+      label: category.label,
+      description: category.description,
+      swatch: category.swatch,
+    })),
+    {
+      key: "church-event",
+      label: "Featured church events",
+      description: "Upcoming events and gatherings from our Events page",
+      swatch: "bg-brand-accent",
+    },
+  ];
+
   return (
     <section aria-labelledby="calendar-legend" className="mt-10 rounded-2xl border border-brand-line bg-white p-6">
       <h2 id="calendar-legend" className="font-display text-lg font-semibold">
         What the colours mean
       </h2>
       <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-        {Object.entries(calendarCategories).map(([key, category]) => (
-          <div key={key} className="flex items-start gap-3">
-            <span aria-hidden className={`mt-1 size-4 shrink-0 rounded ${category.swatch}`} />
+        {legendItems.map((item) => (
+          <div key={item.key} className="flex items-start gap-3">
+            <span aria-hidden className={`mt-1 size-4 shrink-0 rounded ${item.swatch}`} />
             <div>
-              <dt className="font-semibold">{category.label}</dt>
-              <dd className="text-sm text-brand-muted">{category.description}</dd>
+              <dt className="font-semibold">{item.label}</dt>
+              <dd className="text-sm text-brand-muted">{item.description}</dd>
             </div>
           </div>
         ))}

@@ -1,4 +1,6 @@
 import type { EventInput } from "@fullcalendar/core";
+import type { CalendarChurchEvent } from "@/lib/data/public";
+import { toDateTimeInputValue } from "@/lib/dates";
 import { site } from "@/lib/site";
 import type { CalendarCategory, CalendarEntry } from "@/lib/types/database";
 
@@ -78,6 +80,31 @@ export function toCalendarEvent(entry: CalendarEntry): EventInput {
     color,
     textColor,
     extendedProps,
+  };
+}
+
+// Maps a row from the `events` table into a FullCalendar event so any event
+// created in the admin dashboard automatically shows up on /calendar.
+export function toChurchCalendarEvent(event: CalendarChurchEvent): EventInput {
+  const localDateTime = event.event_date.includes("T")
+    ? toDateTimeInputValue(event.event_date)
+    : `${event.event_date}T00:00`;
+  const hasSpecificTime = !localDateTime.endsWith("T00:00");
+
+  return {
+    id: `event-${event.id}`,
+    title: event.title,
+    start: hasSpecificTime ? localDateTime : localDateTime.slice(0, 10),
+    allDay: !hasSpecificTime,
+    backgroundColor: "var(--color-brand-accent)",
+    borderColor: "var(--color-brand-accent)",
+    color: "var(--color-brand-accent)",
+    textColor: "#ffffff",
+    extendedProps: {
+      description: event.description,
+      location: event.location,
+      isChurchEvent: true,
+    },
   };
 }
 

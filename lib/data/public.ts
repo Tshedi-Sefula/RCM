@@ -38,6 +38,11 @@ export function startOfToday() {
   return `${today}T00:00:00+02:00`;
 }
 
+export type CalendarChurchEvent = Pick<
+  ChurchEvent,
+  "id" | "title" | "event_date" | "description" | "location"
+>;
+
 export async function getUpcomingEvents(): Promise<QueryResult<ChurchEvent[]>> {
   "use cache";
   cacheTag(CACHE_TAGS.events);
@@ -54,6 +59,29 @@ export async function getUpcomingEvents(): Promise<QueryResult<ChurchEvent[]>> {
 
   if (error) {
     // Retry soon rather than caching the failure for hours.
+    cacheLife("minutes");
+    return { data: null, error: error.message };
+  }
+  cacheLife("hours");
+  return { data, error: null };
+}
+
+// Fetches all events from the `events` table so they automatically appear on
+// the public /calendar page without duplicating rows in `calendar_entries`.
+export async function getCalendarChurchEvents(): Promise<QueryResult<CalendarChurchEvent[]>> {
+  "use cache";
+  cacheTag(CACHE_TAGS.events, CACHE_TAGS.calendar);
+  if (!isSupabaseConfigured) {
+    cacheLife("hours");
+    return { data: null, error: notConfigured };
+  }
+
+  const { data, error } = await createPublicClient()
+    .from("events")
+    .select("id, title, event_date, description, location")
+    .order("event_date", { ascending: true });
+
+  if (error) {
     cacheLife("minutes");
     return { data: null, error: error.message };
   }

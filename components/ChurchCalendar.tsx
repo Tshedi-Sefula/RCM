@@ -5,12 +5,14 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import type { EventContentArg, EventMountArg } from "@fullcalendar/core";
-import { recurringServiceEvents, toCalendarEvent } from "@/lib/calendar";
+import { recurringServiceEvents, toCalendarEvent, toChurchCalendarEvent } from "@/lib/calendar";
+import type { CalendarChurchEvent } from "@/lib/data/public";
 import { holidayEventSource } from "@/lib/holidays";
 import type { CalendarEntry } from "@/lib/types/database";
 
 type ChurchCalendarProps = {
   entries: CalendarEntry[];
+  churchEvents?: CalendarChurchEvent[];
 };
 
 const mobileQuery = "(max-width: 767px)";
@@ -61,8 +63,20 @@ function renderEventContent({ event, view }: EventContentArg) {
 // View-only calendar: no drag/drop, selection or editing for visitors.
 // Phones start on the list view, which reads better than a tiny grid. It lists a
 // month at a time so the weekly services don't crowd out everything else.
-export default function ChurchCalendar({ entries }: ChurchCalendarProps) {
-  const events = useMemo(() => [...recurringServiceEvents(), ...entries.map(toCalendarEvent)], [entries]);
+export default function ChurchCalendar({ entries, churchEvents = [] }: ChurchCalendarProps) {
+  const events = useMemo(() => {
+    const entryKeys = new Set(
+      entries.map((entry) => `${entry.start_date}::${entry.title.trim().toLowerCase()}`),
+    );
+    const mappedEvents = churchEvents
+      .filter((event) => {
+        const dateKey = event.event_date.slice(0, 10);
+        return !entryKeys.has(`${dateKey}::${event.title.trim().toLowerCase()}`);
+      })
+      .map(toChurchCalendarEvent);
+
+    return [...recurringServiceEvents(), ...entries.map(toCalendarEvent), ...mappedEvents];
+  }, [entries, churchEvents]);
   // SA public holidays for whichever range is on screen, minus days the admin
   // has already marked with their own holiday entry.
   const holidays = useMemo(
